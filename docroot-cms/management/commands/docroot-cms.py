@@ -1,12 +1,11 @@
 from django.core.management.base import BaseCommand
 from argparse import RawTextHelpFormatter
-from django.conf import settings
 import os
 import shutil
 import pathlib
-import site
 from datetime import datetime
 from distutils.sysconfig import get_python_lib
+
 
 class Command(BaseCommand):
     help = """
@@ -14,7 +13,7 @@ class Command(BaseCommand):
     --------------------------------------
     example: ./manage.py docroot-cms test update
     example: ./manage.py docroot-cms update
-    
+
     options
     --------
     update - attempts to update user files with any configuration changes in settings and urls
@@ -44,32 +43,19 @@ class Command(BaseCommand):
         else:
             self.stdout.write(f'attempting to update docroot app and test files')
             # get the directory from docroot-cms/docroot
-            # first try and get it from distutils (since pyenv symlinks to root version and site doesnt work for virtualenv)
-            module_path = pathlib.Path(get_python_lib()) / 'docroot-cms' / 'docroot'
-            print(f'module path from DISTUTILS.SYSCONFIG: {module_path}')
-            if not os.path.exists(module_path):
-                module_path = pathlib.Path(os.__file__).parent / 'site-packages' / 'docroot-cms' / 'docroot'
-                print(f'module path from runtime: {module_path}')
-            if not os.path.exists(module_path):
-                # for debugging lets next try to find the app locally to copy from
-                module_path = pathlib.Path('docroot-cms')
-                print(f'module path from project: {module_path}')
-            if not os.path.exists(module_path):
-                raise ModuleNotFoundError(
-                    'Module docroot-cms was not installed.  Install using pip install django-docroot-cms and try again.')
-            else:
-                # we have a module path so now lets try and copy the docroot_settings_append and docroot_urls_append
-                # settings.py changes
-                local_path = pathlib.Path()
-                print(f'local path: {local_path}')
-                settings_path = local_path/"docroot"/"settings.py"
-                settings_append_path = module_path / "docroot_settings_append.py"
-                self.append_or_replace_content(settings_path, settings_append_path)
-                # urls.py changes
-                urls_path = local_path/"docroot"/"urls.py"
-                urls_append_path = module_path / "docroot_urls_append.py"
-                self.append_or_replace_content(urls_path, urls_append_path)
-                return success_instructions
+            module_path = self.get_module_path()
+            # we have a module path so now lets try and copy the docroot_settings_append and docroot_urls_append
+            # settings.py changes
+            local_path = pathlib.Path()
+            print(f'local path: {local_path}')
+            settings_path = local_path / "docroot" / "settings.py"
+            settings_append_path = module_path / "docroot_settings_append.py"
+            self.append_or_replace_content(settings_path, settings_append_path)
+            # urls.py changes
+            urls_path = local_path / "docroot" / "urls.py"
+            urls_append_path = module_path / "docroot_urls_append.py"
+            self.append_or_replace_content(urls_path, urls_append_path)
+            return success_instructions
 
     def append_or_replace_content(self, old_path, new_path):
         if os.path.exists(new_path):
@@ -95,6 +81,7 @@ class Command(BaseCommand):
                     #     current_content = output_file.read()
                     start_pos = current_content.find(heading_substring)
                     end_pos = -1
+                    new_content = None
                     if start_pos > -1:
                         end_pos = current_content.find(heading_substring, start_pos + len(heading_substring))
                         if end_pos > -1:
@@ -115,7 +102,7 @@ class Command(BaseCommand):
                         # backup the old file before we mess with it
                         datetime_ext = datetime.now().strftime("%Y%m%d-%H%M")
                         new_file_name = old_path.name + "." + datetime_ext
-                        shutil.copy(old_path, old_path.parent / new_file_name )
+                        shutil.copy(old_path, old_path.parent / new_file_name)
                         # write the new_content to the current file
                         if self.testing:
                             test_file_name = old_path.stem + "_new.py"
@@ -130,10 +117,26 @@ class Command(BaseCommand):
         else:
             self.stderr.write(self.style.ERROR(f'Settings append file [{new_path}] was not found!'))
 
+    def get_module_path(self):
+        # first try and get it from distutils (since pyenv symlinks to root version and site doesnt work for virtualenv)
+        module_path = pathlib.Path(get_python_lib()) / 'docroot-cms'
+        print(f'module path from DISTUTILS.SYSCONFIG: {module_path}')
+        if not os.path.exists(module_path):
+            module_path = pathlib.Path(os.__file__).parent / 'site-packages' / 'docroot-cms'
+            print(f'module path from runtime: {module_path}')
+        if not os.path.exists(module_path):
+            # for debugging lets next try to find the app locally to copy from
+            module_path = pathlib.Path('docroot-cms')
+            print(f'module path from project: {module_path}')
+        if not os.path.exists(module_path):
+            raise ModuleNotFoundError(
+                'Module docroot-cms was not installed.  Install using pip install django-docroot-cms and try again.')
+        return module_path
+
     def install(self):
         success_instructions = """
         Successfully Installed cms.
-        
+
         """
         # check that docroot app exists
         # NOTE: we will assume if there is a docroot dir then we already installed
@@ -143,26 +146,23 @@ class Command(BaseCommand):
             self.stdout.write(f'installing docroot app and test files')
             # get the directory from docroot-cms/docroot
             # todo: figure out how to make this work when it is installed as a module
-            module_path = pathlib.Path(os.__file__).parent / 'site-packages' / 'docroot-cms' / 'docroot'
-            print(f'module path: {module_path}')
-            if not os.path.exists(module_path):
-                raise ModuleNotFoundError('Module docroot-cms was not installed.  Install using pip install django-docroot-cms and try again.')
-            else:
-                local_path = pathlib.Path()
-                print(f'local path: {local_path}')
-                shutil.copytree(module_path, local_path)
-                self.stdout.write(self.style.SUCCESS(f'Successfully copied {module_path} to {local_path}'))
-                # check that required directories exist
-                if not os.path.exists(local_path / 'images'):
-                    os.makedirs(local_path / 'images')
-                    self.stdout.write(self.style.SUCCESS(f"Created {local_path / 'images'}"))
-                if not os.path.exists(local_path / 'cache'):
-                    os.makedirs(local_path / 'cache')
-                    self.stdout.write(self.style.SUCCESS(f"Created {local_path / 'cache'}"))
-                if not os.path.exists(local_path / 'data'):
-                    os.makedirs(local_path / 'data')
-                    self.stdout.write(self.style.SUCCESS(f"Created {local_path / 'data'}"))
-                return success_instructions
+            module_path = self.get_module_path()
+            module_docroot_path = module_path / 'docroot'
+            local_path = pathlib.Path()
+            print(f'local path: {local_path}')
+            shutil.copytree(module_docroot_path, local_path)
+            self.stdout.write(self.style.SUCCESS(f'Successfully copied {module_docroot_path} to {local_path}'))
+            # check that required directories exist
+            if not os.path.exists(local_path / 'images'):
+                os.makedirs(local_path / 'images')
+                self.stdout.write(self.style.SUCCESS(f"Created {local_path / 'images'}"))
+            if not os.path.exists(local_path / 'cache'):
+                os.makedirs(local_path / 'cache')
+                self.stdout.write(self.style.SUCCESS(f"Created {local_path / 'cache'}"))
+            if not os.path.exists(local_path / 'data'):
+                os.makedirs(local_path / 'data')
+                self.stdout.write(self.style.SUCCESS(f"Created {local_path / 'data'}"))
+            return success_instructions
 
     def handle(self, *args, **options):
         if "update" in options['option']:
