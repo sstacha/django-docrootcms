@@ -1,0 +1,9 @@
+From:
+https://docs.djangoproject.com/en/3.0/intro/reusable-apps/
+
+dont forget to increment the version number in setup.py
+delete any dist or eggs
+python setup.py sdist
+
+To Test:
+pip install --upgrade ../../projects/django_docroot_cms/dist/django-docroot-cms-0.2.tar.gz

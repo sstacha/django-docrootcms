@@ -1,0 +1,68 @@
+{% extends "page.dt" %}
+
+{% block title %}Debug{% endblock title %}
+
+{% block content %}
+
+    <h3>Testing the context</h3>
+    <hr>
+{#    <h4>variables</h4>#}
+{#    {% for key, value in variables.items %}#}
+{#        {{ key }}:&nbsp;{{ value }}<br>#}
+{#    {% endfor %}#}
+    <p>
+    <h4>cookies</h4>
+    {% for key, value in request.COOKIES.items %}
+        {{ key }}:&nbsp;{{ value }}<br>
+    {% endfor %}
+    </p>
+    <p>
+    <h4>headers</h4>
+{#    {{ headers }}#}
+    {% for key, value in headers.items %}
+        {{ key }}:&nbsp;{{ value }}<br>
+    {% endfor %}
+    </p>
+    <p>
+    <h4>user</h4>
+    {{ user }}<br>
+    </p>
+    <p>
+    <h4>request ip</h4>
+    {{ request_ip }}<br>
+    </p>
+    <p>
+    <h4>real ip</h4>
+    {{ real_ip }}<br>
+    </p>
+
+{#    <h4>visitor</h4>#}
+{#    {% for key, value in visitor.items %}#}
+{#        {{ key }}:&nbsp;{{ value }}<br>#}
+{#    {% endfor %}#}
+
+{#    <h4>Active Users:</h4>#}
+{#    {% load request_tag %}#}
+{#    {% active_users in 10 minutes as user_list %}#}
+{#    {% for user in user_list %}#}
+{#        {{ user.username }}#}
+{#    {% endfor %}#}
+    <p>
+    <h4>testing DCMS_BOOGER and DCMS_BOOGER2 environment variable passthrough</h4>
+    Note: To test create an environment variables for these set to a string and reload the page; Note the initial
+    DCMS_ prefix is stripped off when included in the settings variables.<br>
+    <br>
+    settings.BOOGER: {{ b }}<br>
+    settings.BOOGER2: {{ b2 }}<br>
+    </p>
+
+{% endblock content %}
+
+{% block js %}
+    <script type="text/javascript" charset="utf-8">
+        $(function() {
+            // Add JQuery Here
+            console.log("Page Level Javascript Ran!");
+        });
+    </script>
+{% endblock js %}

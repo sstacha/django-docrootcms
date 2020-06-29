@@ -1,0 +1,188 @@
+{% extends "_cms.dt" %}
+{# BASIC STRUCTURE FOR A PAGE; PAGE LEVEL OVERRIDES SHOULD HAPPEN HERE THEN NON-PAGE LEVEL at .dt AS A RULE #}
+{% block title %}{{ title|default_if_none:"Page Title" }}{% endblock %}
+{% block description %}{{ description|default_if_none:"Page Description" }}{% endblock %}
+
+{% block page-css %}
+    {{ block.super }}
+{#    <!-- icons -->#}
+{#    <link rel="apple-touch-icon" href="/apple-touch-icon.png">#}
+{#    <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png">#}
+{#    <!-- icons -->#}
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap -->
+{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">#}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- MDB -->
+{#    <link href="/mdb/css/bootstrap.min.css" rel="stylesheet">#}
+    <link href="/mdb/css/mdb.min.css" rel="stylesheet">
+    <!---->
+{% endblock %}
+
+{% block page-js %}
+    {{ block.super }}
+    <!-- Bootstrap 4 -->
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>#}
+{#    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- MDB -->
+    <script type="text/javascript" src="/mdb/js/mdb.min.js"></script>
+    <!---->
+{% endblock %}
+
+{% block page-header %}
+<!--Main Navigation-->
+<header class="rounded " style="border: 1px solid lightgray">
+{#    <!--Navbar Example from bootstrap 4 docs-->#}
+{#    <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">#}
+{#        <a class="navbar-brand" href="#">Navbar</a>#}
+{#        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample09"#}
+{#                aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">#}
+{#            <span class="navbar-toggler-icon"></span>#}
+{#        </button>#}
+{##}
+{#        <div class="collapse navbar-collapse" id="navbarsExample09">#}
+{#            <div class="navbar-nav mr-auto">#}
+{#                <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>#}
+{#                <a class="nav-item nav-link" href="#">Link</a>#}
+{#                <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>#}
+{#                <div class="nav-item dropdown">#}
+{#                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"#}
+{#                       aria-haspopup="true" aria-expanded="false">Dropdown</a>#}
+{#                    <div class="dropdown-menu" aria-labelledby="dropdown09">#}
+{#                        <a class="dropdown-item" href="#">Action</a>#}
+{#                        <a class="dropdown-item" href="#">Another action</a>#}
+{#                        <a class="dropdown-item" href="#">Something else here</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <form class="form-inline my-2 my-md-0">#}
+{#                <input class="form-control" type="text" placeholder="Search" aria-label="Search">#}
+{#            </form>#}
+{#        </div>#}
+{#    </nav>#}
+{#    <!--/.Navbar-->#}
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg navbar-dark indigo">
+
+      <!-- Navbar brand -->
+      <a class="navbar-brand" href="#">Navbar</a>
+
+      <!-- Collapse button -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+        aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Collapsible content -->
+      <div class="collapse navbar-collapse" id="basicExampleNav">
+
+        <!-- Links -->
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Pricing</a>
+          </li>
+
+          <!-- Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">Dropdown</a>
+            <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </li>
+
+        </ul>
+        <!-- Links -->
+
+        <form class="form-inline">
+          <div class="md-form my-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          </div>
+        </form>
+      </div>
+      <!-- Collapsible content -->
+
+    </nav>
+    <!--/.Navbar-->
+
+    {% block header %}{% endblock %}
+</header>
+<!--/.Main Navigation-->
+{% endblock %}
+
+{% block page-content %}
+<!--Main layout-->
+<main class="mt-5">
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</main>
+<!--/.Main layout-->
+{% endblock %}
+
+{% block page-footer %}
+    <!--Footer-->
+    <footer class="bg-light rounded mt-4 pt-3" style="border: 1px solid lightgray">
+        <!-- Footer Links -->
+        <div class="container-fluid text-center text-md-left">
+            <!-- Grid row -->
+            <div class="row">
+                <!-- Grid column -->
+                <div class="col-md-6 mt-md-0 mt-3">
+                    <!-- Content -->
+                    <h5 class="text-uppercase">Footer Content</h5>
+                    <p>Here you can use rows and columns to organize your footer content.</p>
+                </div>
+                <!-- Grid column -->
+                <hr class="clearfix w-100 d-md-none pb-3">
+                <!-- Grid column -->
+                <div class="col-md-3 mb-md-0 mb-3">
+                    <!-- Links -->
+                    <h5 class="text-uppercase">Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#!">Link 1</a></li>
+                        <li><a href="#!">Link 2</a></li>
+                        <li><a href="#!">Link 3</a></li>
+                        <li><a href="#!">Link 4</a></li>
+                    </ul>
+                </div>
+                <!-- Grid column -->
+                <!-- Grid column -->
+                <div class="col-md-3 mb-md-0 mb-3">
+                    <!-- Links -->
+                    <h5 class="text-uppercase">Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#!">Link 1</a></li>
+                        <li><a href="#!">Link 2</a></li>
+                        <li><a href="#!">Link 3</a></li>
+                        <li><a href="#!">Link 4</a></li>
+                    </ul>
+                </div>
+                <!-- Grid column -->
+            </div>
+            <!-- Grid row -->
+        </div>
+        <!-- Footer Links -->
+        <!-- Copyright -->
+        <div class="footer-copyright text-center small py-3">© 2018 Copyright:
+            <a href="https://mdbootstrap.com/education/bootstrap/"> Example.com</a>
+        </div>
+        <!-- Copyright -->
+        {% block footer %}{% endblock %}
+    </footer>
+    <!--/.Footer-->
+{% endblock %}

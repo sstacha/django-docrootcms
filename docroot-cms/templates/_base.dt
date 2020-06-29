@@ -1,0 +1,32 @@
+<!doctype html>
+{% load static %}
+{% block html-tag %}<html class="no-js" lang="en">{% endblock %}
+{% block head-tag %}<head>{% endblock %}
+<title>{% block head_title %}{% endblock %}</title>
+{# excuting short script to replace no-js in html with js for use in css below #}
+<script>{# document.documentElement.className = document.documentElement.className.replace("no-js","js"); #}
+document.documentElement.classList.remove('no-js');
+</script>{# Use in css: .no-js .some-class-name {display: None;} #}
+{% block page_meta %}{# meta info will be added at the page level to deal with multiple title block definitions #}
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="title" content="{% block meta-title %}{% endblock %}"/>
+<meta name="description" content="{% block description %}{% endblock %}"/>
+<meta name="apple-mobile-web-app-title" content="{% block apple-mobile-web-app-title %}{% endblock %}"/>{% endblock %}{% block meta %}{% endblock %}{% block page-css %}{% endblock %}{% block css %}{% endblock %}
+</head>
+{% block body-tag %}<body>{% endblock %}
+<!--[if lt IE 8]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser.
+Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+{# -- header #}
+{% block page-header %}{% endblock %}
+{# -- Add your site or application content here -- #}
+{% block page-content %}{% endblock %}
+{# -- footer  #}
+{% block page-footer %}{% endblock %}
+{% block page-js %}{% endblock %}
+{% block js %}{% endblock %}
+</body>
+</html>

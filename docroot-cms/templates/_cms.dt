@@ -1,0 +1,54 @@
+{% extends "_base.dt" %}
+{% load static %}
+
+{# contains conditional css and js functionality for the cms to work if a user is logged in #}
+{# BLOCKS SHOULD BE OVERRIDDEN HERE FOR ANYTHING WE WANT ALL DERIVED PAGES TO USE ON OUR SITE #}
+{# PAGE DERIVITIVES SHOULD ALWAYS CALL SUPER SO THESE ARE INCLUDED UNLESS THERE IS A GOOD REASON NOT TO #}
+
+{# Copy title into head_title, meta-title & apple-mobile-web-app-title from 1_base.dt #}
+{# NOTE: NOW .DT PAGES CAN JUST ADD A TITLE BLOCK TO HAVE THEM ALL SET WITH ONE DEFINITION #}
+{% block head_title %}{% block meta-title %}{% block apple-mobile-web-app-title %}{% block title %}{% endblock %}{% endblock %}{% endblock %}{% endblock %}
+
+{% block page-css %}
+    {{ block.super }}
+    {# DOCROOT CMS STYLING FOR DEFINED EDITABLE AREAS #}
+    <style>
+        .cke_show_borders {
+            -moz-box-shadow: 0 0 10px 2px rgba(100, 62, 136, 0.72);
+            -webkit-box-shadow: 0 0 10px 2px rgba(100, 62, 136, 0.72);
+            box-shadow: 0 0 10px 2px rgba(100, 62, 136, .72);
+        }
+        blockquote {
+            padding: .5rem 1rem;
+            border-left: .25rem solid #eceeef;
+        }
+    </style>
+{% endblock %}
+
+{# todo: see about a request middleware to determine editable (minimize any db calls)  #}
+{% block page-js %}
+    {{ block.super }}
+    {# WE WANT ALL PAGE DERIVITIVES TO INCLUDE JQUERY; REQUIRED FOR DOCROOT CMS INTEGRATION #}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    {# DOCROOT CMS CKEDITOR REQUIREMENT AND CODE TO ENABLE CMS FUNCTIONS IN CKEDITOR #}
+    {# todo: python wrapper this with a check for loading ckeditor in the first place #}
+    <script src="https://cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $( document ).ready(function() {
+
+            $("[contenteditable]").each(function () {
+                   if ($(this).is("[id]"))
+                       console.log("has id...");
+                   else {
+                       console.log("editable content tag found without id; removing editability...");
+                       $(this).attr( "contenteditable", "false" )
+                   }
+                }
+            );
+            CKEDITOR.plugins.addExternal( 'usave', '{% static "ckeditor/plugins/usave/" %}', 'plugin.js' );
+            CKEDITOR.config.customConfig = '{% static "ckeditor/custom_config.js" %}'
+        });
+    </script>
+{% endblock %}
