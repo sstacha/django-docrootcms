@@ -4,7 +4,9 @@ from django.conf import settings
 import os
 import shutil
 import pathlib
+import site
 from datetime import datetime
+from distutils.sysconfig import get_python_lib
 
 class Command(BaseCommand):
     help = """
@@ -42,11 +44,16 @@ class Command(BaseCommand):
         else:
             self.stdout.write(f'attempting to update docroot app and test files')
             # get the directory from docroot-cms/docroot
-            module_path = pathlib.Path(os.__file__).parent / 'site-packages' / 'docroot-cms' / 'docroot'
-            print(f'module path: {module_path}')
+            # first try and get it from distutils (since pyenv symlinks to root version and site doesnt work for virtualenv)
+            module_path = pathlib.Path(get_python_lib()) / 'docroot-cms' / 'docroot'
+            print(f'module path from DISTUTILS.SYSCONFIG: {module_path}')
+            if not os.path.exists(module_path):
+                module_path = pathlib.Path(os.__file__).parent / 'site-packages' / 'docroot-cms' / 'docroot'
+                print(f'module path from runtime: {module_path}')
             if not os.path.exists(module_path):
                 # for debugging lets next try to find the app locally to copy from
                 module_path = pathlib.Path('docroot-cms')
+                print(f'module path from project: {module_path}')
             if not os.path.exists(module_path):
                 raise ModuleNotFoundError(
                     'Module docroot-cms was not installed.  Install using pip install django-docroot-cms and try again.')
