@@ -55,6 +55,21 @@ class Command(BaseCommand):
             urls_path = local_path / "docroot" / "urls.py"
             urls_append_path = module_path / "docroot_urls_append.py"
             self.append_or_replace_content(urls_path, urls_append_path)
+            # create the resouces folder if it doesn't exist and bring all the templates and append files over
+            resources_path = local_path / 'docroot' / 'resources'
+            if os.path.exists(resources_path):
+                shutil.rmtree(resources_path)
+                self.stdout.write(self.style.SUCCESS(f"Removed {resources_path}"))
+            os.makedirs(resources_path)
+            self.stdout.write(self.style.SUCCESS(f"Created {resources_path}"))
+            module_template_path = module_path / 'templates'
+            shutil.copytree(module_template_path, resources_path / 'templates')
+            self.stdout.write(self.style.SUCCESS(f"Copied {module_template_path} to {resources_path / 'templates'}"))
+            shutil.copy(settings_append_path, resources_path / 'docroot_settings_append.py')
+            self.stdout.write(self.style.SUCCESS(f"Copied {settings_append_path} to {resources_path / 'docroot_settings_append.py'}"))
+            shutil.copy(urls_append_path, resources_path / 'docroot_urls_append.py')
+            self.stdout.write(self.style.SUCCESS(f"Copied {urls_append_path} to {resources_path / 'docroot_urls_append.py'}"))
+
             return success_instructions
 
     def append_or_replace_content(self, old_path, new_path):
@@ -110,14 +125,15 @@ class Command(BaseCommand):
                             test_file.write_text(new_content)
                             self.stdout.write(self.style.SUCCESS(f'Successfully updated {new_path} to {test_file}'))
                         else:
-                            new_path.write_text(new_content)
+                            old_path.write_text(new_content)
                             self.stdout.write(self.style.SUCCESS(f'Successfully updated {new_path} to {old_path}'))
                 else:
                     self.stderr.write(self.style.ERROR(f'Settings file [{old_path}] was not found!'))
         else:
             self.stderr.write(self.style.ERROR(f'Settings append file [{new_path}] was not found!'))
 
-    def get_module_path(self):
+    @staticmethod
+    def get_module_path():
         # first try and get it from distutils (since pyenv symlinks to root version and site doesnt work for virtualenv)
         module_path = pathlib.Path(get_python_lib()) / 'docroot-cms'
         print(f'module path from DISTUTILS.SYSCONFIG: {module_path}')
@@ -145,7 +161,7 @@ class Command(BaseCommand):
         else:
             self.stdout.write(f'installing docroot app and test files')
             # get the directory from docroot-cms/docroot
-            # todo: figure out how to make this work when it is installed as a module
+            # todo: figure out how to make this work when it is installed as a module; test this usecase
             module_path = self.get_module_path()
             module_docroot_path = module_path / 'docroot'
             local_path = pathlib.Path()
