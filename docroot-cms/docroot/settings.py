@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -222,14 +223,14 @@ if DEBUG:
 
 # Replace any DCMS_ prefixed environment variables in settings at startup
 #   NOTE: used for docker/local machine environment variable loading overrides
-#	NOTE: expect strings not complex items like below
-#this_module = sys.modules[__name__]
-#for k, v in os.environ.items():
-#    if k.startswith("DCMS_"):
-#        attr_key = k[5:]
-#        if attr_key:
-#            # print (f"attempting to set {attr_key} to [{str(v)}]")
-#            setattr(this_module, attr_key, v)
-# sas this is some extra stuff we should remove
+# Replace any DCMS_ prefixed environment variables in settings at startup
+#   NOTE: used for docker/local machine environment variable loading overrides
+this_module = sys.modules[__name__]
+for k, v in os.environ.items():
+    if k.startswith("DCMS_"):
+        attr_key = k[5:]
+        if attr_key:
+            # print (f"attempting to set {attr_key} to [{str(v)}]")
+            setattr(this_module, attr_key, v)
 
 # ------------------------ DOCROOT CMS SETTINGS ------------------------------------

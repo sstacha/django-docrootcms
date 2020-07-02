@@ -95,16 +95,15 @@ if DEBUG:
 
 # SECURITY WARNING: keep the secret key used in production secret! (do not version .secret_key)
 # 	NOTE: if you do use a DCMS_SECRET_KEY variable which will get replaced at runtime below
-
 # Replace any DCMS_ prefixed environment variables in settings at startup
 #   NOTE: used for docker/local machine environment variable loading overrides
-#	NOTE: expect strings not complex items like below
-#this_module = sys.modules[__name__]
-#for k, v in os.environ.items():
-#    if k.startswith("DCMS_"):
-#        attr_key = k[5:]
-#        if attr_key:
-#            # print (f"attempting to set {attr_key} to [{str(v)}]")
-#            setattr(this_module, attr_key, v)
+import sys
+this_module = sys.modules[__name__]
+for k, v in os.environ.items():
+    if k.startswith("DCMS_"):
+        attr_key = k[5:]
+        if attr_key:
+            # print (f"attempting to set {attr_key} to [{str(v)}]")
+            setattr(this_module, attr_key, v)
 
 # ------------------------ DOCROOT CMS SETTINGS ------------------------------------
