@@ -49,26 +49,27 @@ class Command(BaseCommand):
             local_path = pathlib.Path()
             print(f'local path: {local_path}')
             settings_path = local_path / "docroot" / "settings.py"
-            settings_append_path = module_path / "docroot_settings_append.py"
+            settings_append_path = module_path / "resources" / "docroot_settings_append.py"
             self.append_or_replace_content(settings_path, settings_append_path)
             # urls.py changes
             urls_path = local_path / "docroot" / "urls.py"
-            urls_append_path = module_path / "docroot_urls_append.py"
+            urls_append_path = module_path / "resources" / "docroot_urls_append.py"
             self.append_or_replace_content(urls_path, urls_append_path)
-            # create the resouces folder if it doesn't exist and bring all the templates and append files over
+            # create the resources folder if it doesn't exist and bring all the templates and append files over
+            module_resources_path = module_path / 'resources'
             resources_path = local_path / 'docroot' / 'resources'
             if os.path.exists(resources_path):
                 shutil.rmtree(resources_path)
                 self.stdout.write(self.style.SUCCESS(f"Removed {resources_path}"))
-            os.makedirs(resources_path)
-            self.stdout.write(self.style.SUCCESS(f"Created {resources_path}"))
+            # copy the module resources to our resources (should contain various files like append index.dt and data.py
+            shutil.copytree(module_resources_path, resources_path)
+            self.stdout.write(self.style.SUCCESS(f"Copied {module_resources_path} to {resources_path}"))
             module_template_path = module_path / 'templates'
             shutil.copytree(module_template_path, resources_path / 'templates')
             self.stdout.write(self.style.SUCCESS(f"Copied {module_template_path} to {resources_path / 'templates'}"))
-            shutil.copy(settings_append_path, resources_path / 'docroot_settings_append.py')
-            self.stdout.write(self.style.SUCCESS(f"Copied {settings_append_path} to {resources_path / 'docroot_settings_append.py'}"))
-            shutil.copy(urls_append_path, resources_path / 'docroot_urls_append.py')
-            self.stdout.write(self.style.SUCCESS(f"Copied {urls_append_path} to {resources_path / 'docroot_urls_append.py'}"))
+            module_test_path = module_path / 'docroot' / 'files' / 'test'
+            shutil.copytree(module_test_path, resources_path, dirs_exist_ok=True)
+            self.stdout.write(self.style.SUCCESS(f"Copied {module_test_path} to {resources_path}"))
 
             return success_instructions
 
@@ -156,18 +157,20 @@ class Command(BaseCommand):
         """
         # check that docroot app exists
         # NOTE: we will assume if there is a docroot dir then we already installed
-        if os.path.exists('docroot'):
-            return 'docroot directory exists; skipping since already installed'
+        if not os.path.exists('docroot'):
+            self.stderr.write(self.style.ERROR('docroot application directory not found!'))
+            return 'Install docroot application according to instructions: https://github.com/sstacha/django-docroot-cms'
         else:
-            self.stdout.write(f'installing docroot app and test files')
-            # get the directory from docroot-cms/docroot
-            # todo: figure out how to make this work when it is installed as a module; test this usecase
+            self.stdout.write(f'installing docroot files...')
+            # get the directory from docroot-cms/docroot/files
             module_path = self.get_module_path()
-            module_docroot_path = module_path / 'docroot'
+            module_docroot_files_path = module_path / 'docroot' / 'files'
             local_path = pathlib.Path()
+            local_docroot_files_path = local_path / 'docroot' / 'files'
             print(f'local path: {local_path}')
-            shutil.copytree(module_docroot_path, local_path)
-            self.stdout.write(self.style.SUCCESS(f'Successfully copied {module_docroot_path} to {local_path}'))
+            shutil.copytree(module_docroot_files_path, local_docroot_files_path)
+            self.stdout.write(
+                self.style.SUCCESS(f'Successfully copied {module_docroot_files_path} to {local_docroot_files_path}'))
             # check that required directories exist
             if not os.path.exists(local_path / 'images'):
                 os.makedirs(local_path / 'images')
@@ -178,6 +181,25 @@ class Command(BaseCommand):
             if not os.path.exists(local_path / 'data'):
                 os.makedirs(local_path / 'data')
                 self.stdout.write(self.style.SUCCESS(f"Created {local_path / 'data'}"))
+            return success_instructions
+
+    def develop(self):
+        success_instructions = """
+        Successfully Installed cms application for development.
+
+        """
+        # check that docroot-cms app doesn't already exist locally
+        if os.path.exists('docroot-cms'):
+            self.stderr.write(self.style.ERROR('docroot-cms application already exists locally for development!'))
+            return 'Remove the existing directory to reload a newer version.'
+        else:
+            self.stdout.write(f'installing docroot-cms from virtual environment...')
+            module_path = self.get_module_path()
+            local_path = pathlib.Path() / 'docroot-cms'
+            print(f'local path: {local_path}')
+            shutil.copytree(module_path, local_path, dirs_exist_ok=True)
+            self.stdout.write(
+                self.style.SUCCESS(f'Successfully copied {module_path} to {local_path}'))
             return success_instructions
 
     def handle(self, *args, **options):
@@ -195,5 +217,7 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.WARNING(f'{self.install()}'))
             except ModuleNotFoundError as nfe:
                 self.stderr.write(self.style.ERROR(f'{nfe}'))
+        elif "develop" in options['option']:
+            self.stdout.write(self.style.WARNING(f'{self.develop()}'))
         else:
             self.stdout.write(self.style.SUCCESS(self.help))

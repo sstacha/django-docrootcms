@@ -13,10 +13,10 @@ DOCROOT_ROOT = os.path.join(BASE_DIR, "docroot/files/")
 MIDDLEWARE += (
     'docroot-cms.middleware.DocrootFallbackMiddleware',
 )
-INSTALLED_APPS += (
-    'docroot',
-    'docroot-cms',
-)
+# INSTALLED_APPS += (
+#     'docroot',
+#     'docroot-cms',
+# )
 
 # added for a problem in the way apache handles WSGI; would like to push this to web server at some point
 #   to eliminate 2 file checks for every request
