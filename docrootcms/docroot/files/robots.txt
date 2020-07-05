@@ -1,0 +1,7 @@
+# SEE: https://support.google.com/webmasters/answer/6062596?hl=en&ref_topic=6061961
+
+User-agent: *
+User-agent: Mediapartners-Google
+Disallow: /mdb/
+Disallow: /test/
+Allow: /

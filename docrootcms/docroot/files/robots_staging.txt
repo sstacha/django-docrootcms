@@ -1,0 +1,12 @@
+# SEE: https://support.google.com/webmasters/answer/6062596?hl=en&ref_topic=6061961
+# NOTE: replace robots.txt on your site with this one in staging environment to prevent indexing when publicly accessible
+
+User-agent: *
+User-agent: AdsBot-Google
+User-agent: APIs-Google
+User-agent: AdsBot-Google-Mobile
+User-agent: AdsBot-Google-Mobile-Apps
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Mediapartners-Google
+Disallow: /

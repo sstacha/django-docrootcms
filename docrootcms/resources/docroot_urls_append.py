@@ -3,6 +3,6 @@
 from django.conf.urls import include
 
 urlpatterns += [
-    path('_cms/', include('docroot-cms.urls')),
+    path('_cms/', include('docrootcms.urls')),
 ]
 # ------------------------ DOCROOT CMS URLS ------------------------------------

@@ -366,6 +366,10 @@ def render_page(request, template, module_name):
     if context:
         template_context.push(context)
     response = HttpResponse(template.render(template_context))
+    # add a canonical header if we are doing some fancy string replacement so analytics work properly with SEO
+    if request.path != "/" + module_name and request.scheme and request.get_host():
+        response['Link'] = f'< {request.scheme}://{request.get_host()}/{module_name} >; rel="canonical"'
+
     return response
 
 

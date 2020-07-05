@@ -11,12 +11,9 @@ DOCROOT_ROOT = os.path.join(BASE_DIR, "docroot/files/")
 
 # add our docroot application to the installed apps and middleware initializations
 MIDDLEWARE += (
-    'docroot-cms.middleware.DocrootFallbackMiddleware',
+    'docrootcms.middleware.DocrootFallbackMiddleware',
 )
-# INSTALLED_APPS += (
-#     'docroot',
-#     'docroot-cms',
-# )
+INSTALLED_APPS = ['docroot'] + INSTALLED_APPS
 
 # added for a problem in the way apache handles WSGI; would like to push this to web server at some point
 #   to eliminate 2 file checks for every request
@@ -93,13 +90,13 @@ if DEBUG:
     }
 
 # SECURITY WARNING: keep the secret key used in production a secret!
-# NOTE: Recommend using a DCMS_SECRET_KEY environment variable which will get replaced at runtime below
-# Replace any DCMS_ prefixed environment variables in settings at startup
+# NOTE: Recommend using a DOCROOTCMS_SECRET_KEY environment variable which will get replaced at runtime below
+# Replace any DOCROOTCMS_ prefixed environment variables in settings at startup
 # NOTE: used for docker/local machine environment variable loading overrides
 import sys
 this_module = sys.modules[__name__]
 for k, v in os.environ.items():
-    if k.startswith("DCMS_"):
+    if k.startswith("DOCROOTCMS_"):
         attr_key = k[5:]
         if attr_key:
             # print (f"attempting to set {attr_key} to [{str(v)}]")

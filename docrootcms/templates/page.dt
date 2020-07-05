@@ -136,7 +136,7 @@
 
 {% block page-footer %}
     <!--Footer-->
-    <footer class="bg-light rounded mt-4 pt-3" style="border: 1px solid lightgray">
+    <footer class="page-footer font-small indigo mt-4 pt-3">
         <!-- Footer Links -->
         <div class="container-fluid text-center text-md-left">
             <!-- Grid row -->
@@ -178,7 +178,7 @@
         </div>
         <!-- Footer Links -->
         <!-- Copyright -->
-        <div class="footer-copyright text-center small py-3">© 2018 Copyright:
+        <div class="footer-copyright text-center small py-3">© 2020 Copyright:
             <a href="https://mdbootstrap.com/education/bootstrap/"> Example.com</a>
         </div>
         <!-- Copyright -->

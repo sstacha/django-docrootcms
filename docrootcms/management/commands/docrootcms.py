@@ -9,15 +9,19 @@ from distutils.sysconfig import get_python_lib
 
 class Command(BaseCommand):
     help = """
-    usage: ./manage.py docroot-cms [option]
+    usage: ./manage.py docrootcms [option]
     --------------------------------------
-    example: ./manage.py docroot-cms test update
-    example: ./manage.py docroot-cms update
+    example: ./manage.py docrootcms install
+    example: ./manage.py docrootcms test update
+    example: ./manage.py docrootcms update
+    example: ./manage.py docrootcms develop
 
     options
     --------
+    install - attempts to install the starter files and directories to a new docroot application
     update - attempts to update user files with any configuration changes in settings and urls
-    test - prints what files would be changed instead of changing them
+    test - creates new version of files that would be changed instead of changing them
+    develop - copies the docroot-cms module in the virtual environment to local project for development
     """
     testing = False
 
@@ -136,18 +140,18 @@ class Command(BaseCommand):
     @staticmethod
     def get_module_path():
         # first try and get it from distutils (since pyenv symlinks to root version and site doesnt work for virtualenv)
-        module_path = pathlib.Path(get_python_lib()) / 'docroot-cms'
+        module_path = pathlib.Path(get_python_lib()) / 'docrootcms'
         print(f'module path from DISTUTILS.SYSCONFIG: {module_path}')
         if not os.path.exists(module_path):
-            module_path = pathlib.Path(os.__file__).parent / 'site-packages' / 'docroot-cms'
+            module_path = pathlib.Path(os.__file__).parent / 'site-packages' / 'docrootcms'
             print(f'module path from runtime: {module_path}')
         if not os.path.exists(module_path):
             # for debugging lets next try to find the app locally to copy from
-            module_path = pathlib.Path('docroot-cms')
+            module_path = pathlib.Path('docrootcms')
             print(f'module path from project: {module_path}')
         if not os.path.exists(module_path):
             raise ModuleNotFoundError(
-                'Module docroot-cms was not installed.  Install using pip install django-docroot-cms and try again.')
+                'Module docrootcms was not installed.  Install using pip install django-docrootcms and try again.')
         return module_path
 
     def install(self):
@@ -162,7 +166,7 @@ class Command(BaseCommand):
             return 'Install docroot application according to instructions: https://github.com/sstacha/django-docroot-cms'
         else:
             self.stdout.write(f'installing docroot files...')
-            # get the directory from docroot-cms/docroot/files
+            # get the directory from docrootcms/docroot/files
             module_path = self.get_module_path()
             module_docroot_files_path = module_path / 'docroot' / 'files'
             local_path = pathlib.Path()
@@ -189,13 +193,13 @@ class Command(BaseCommand):
 
         """
         # check that docroot-cms app doesn't already exist locally
-        if os.path.exists('docroot-cms'):
-            self.stderr.write(self.style.ERROR('docroot-cms application already exists locally for development!'))
+        if os.path.exists('docrootcms'):
+            self.stderr.write(self.style.ERROR('docrootcms application already exists locally for development!'))
             return 'Remove the existing directory to reload a newer version.'
         else:
-            self.stdout.write(f'installing docroot-cms from virtual environment...')
+            self.stdout.write(f'installing docrootcms from virtual environment...')
             module_path = self.get_module_path()
-            local_path = pathlib.Path() / 'docroot-cms'
+            local_path = pathlib.Path() / 'docrootcms'
             print(f'local path: {local_path}')
             shutil.copytree(module_path, local_path, dirs_exist_ok=True)
             self.stdout.write(

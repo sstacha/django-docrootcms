@@ -23,9 +23,9 @@ be sure to activate your virtual directory if necessary (Ex: pyenv local example
 pip install --upgrade pip
 pip install django
 django-admin startproject docroot .
-pip install django-docroot-cms
+pip install django-docrootcms
 ```
-in docroot/settings.py add docroot-cms to the installed apps block
+in docroot/settings.py add docrootcms to the installed apps block
 ```shell script
 python manage.py docrootcms install
 python manage.py docrootcms update
@@ -41,7 +41,7 @@ be sure to activate your virtual directory if needed
 cd to your existing project directory (contains manage.py)
 ```shell script
 pip install --upgrade pip
-pip install --upgrade django-docroot-cms
+pip install --upgrade django-docrootcms
 python manage.py startapp docroot
 ```
 
@@ -56,7 +56,7 @@ remove the url lines from your existing urls.py file and add this to the top
 ```python
 from docroot.urls import *
 ```
-in docroot/settings.py add docroot-cms to the installed apps block
+in docroot/settings.py add docrootcms to the installed apps block
 ```shell script
 python manage.py docrootcms install
 python manage.py docrootcms update
