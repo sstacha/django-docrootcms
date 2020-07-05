@@ -1,5 +1,5 @@
-# django-docroot-cms
-Docroot CMS is a django application for developers who build manage and maintain websites.  This app takes the simplicity of working with a PHP docroot, the fun of working with Python and fully leverages the power of Django for adding website application functionality.
+# django-docrootcms
+Docroot CMS is a django application for developers who build, manage and maintain websites.  This app takes the simplicity of working with a PHP docroot, the fun of working with Python and fully leverages the power of Django for adding website application functionality.
 
 [ubercode.io: docroot cms](https://www.ubercode/io/products/docrootcms)
 > Because the code matters
