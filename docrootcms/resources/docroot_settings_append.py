@@ -10,10 +10,17 @@ DOCROOT_ROOT = os.path.join(BASE_DIR, "docroot/files/")
 # )
 
 # add our docroot application to the installed apps and middleware initializations
-MIDDLEWARE += (
-    'docrootcms.middleware.DocrootFallbackMiddleware',
-)
-INSTALLED_APPS = ['docroot'] + INSTALLED_APPS
+# NOTE: I am always seeing INSTALLED_APPS & MIDDLEWARE as a modifiable list; if changed to tuple this will fail!
+if 'docroot' not in INSTALLED_APPS and 'docrootcms' in INSTALLED_APPS:
+    docrootcms_idx = INSTALLED_APPS.index('docrootcms')
+    INSTALLED_APPS.insert(docrootcms_idx, 'docroot')
+
+if 'docroot' in INSTALLED_APPS:
+    MIDDLEWARE += (
+        'docrootcms.middleware.DocrootFallbackMiddleware',
+    )
+else:
+    print("WARNING: 'docroot' was not found in INSTALLED_APPS so we are skipping setting up the middleware!")
 
 # added for a problem in the way apache handles WSGI; would like to push this to web server at some point
 #   to eliminate 2 file checks for every request

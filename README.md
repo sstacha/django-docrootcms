@@ -1,7 +1,7 @@
 # django-docroot-cms
-Docroot CMS is a django application for developers who build manage and maintain websites.
+Docroot CMS is a django application for developers who build manage and maintain websites.  This app takes the simplicity of working with a PHP docroot, the fun of working with Python and fully leverages the power of Django for adding website application functionality.
 
-[ubercode.io: docroot cms](https://www.ubercode/io/products/docroot_cms)
+[ubercode.io: docroot cms](https://www.ubercode/io/products/docrootcms)
 > Because the code matters
 
 ## Dependencies
@@ -31,7 +31,13 @@ python manage.py docrootcms install
 python manage.py docrootcms update
 python manage.py makemigrations
 python manage.py migrate
+python manage.py runserver 0.0.0.0:8000
 ```
+
+To test: open a browser to http://localhost:8000/test/
+
+Tutorials & Guides: [ubercode.io: docroot cms tutorials](https://www.ubercode/io/products/docrootcms/tutorials)
+
 
 ### Existing Install
 NOTE: manage.py commands modify the docroot settings.py and urls.py files.  If this is not the projects settings.py and urls.py you will have to manually merge these changes yourself every time you upgrade the django-docroot-cms app.  This is not recommended.
