@@ -1,0 +1,5 @@
+Django
+# todo: add the django-docrootcms version from pypi instead of the code
+# requests
+# mysqlclient
+# django-import-export

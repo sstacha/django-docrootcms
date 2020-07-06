@@ -6,4 +6,4 @@ delete any dist or eggs
 python setup.py sdist
 
 To Test:
-pip install --upgrade ~/projects/django_docroot_cms/dist/django-docrootcms-0.19.tar.gz
+pip install --upgrade ~/projects/django_docrootcms/dist/django-docrootcms-0.22.tar.gz

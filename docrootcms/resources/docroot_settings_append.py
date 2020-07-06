@@ -1,5 +1,9 @@
 # ------------------------ DOCROOT CMS SETTINGS ------------------------------------
 # add our different roots for static files to be served up
+try:
+    STATIC_ROOT
+except NameError:
+    STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 # IMAGES_ROOT = os.path.join(BASE_DIR, "images/")
 # CACHED_ROOT = os.path.join(BASE_DIR, "cache/")
 DOCROOT_ROOT = os.path.join(BASE_DIR, "docroot/files/")
@@ -83,7 +87,7 @@ else:
         if LOGGING['loggers'][logger]['level'] == 'DEBUG':
             LOGGING['loggers'][logger]['level'] = 'INFO'
 
-# OVERRIDING DATABASE LOCATION AND NAME FOR EASY SHARING WITHOUT HAVING TO SHARE EVERYTHING
+# OVERRIDING DATABASE LOCATION AND NAME FOR EASY SHARING
 # NOTE: we are only overriding for sqllite3.  Move the db block below this if you don't want any overrides.
 if 'default' in DATABASES and 'ENGINE' in DATABASES['default'] and DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3':
     DATABASES['default']['NAME']=os.path.join(BASE_DIR, 'data', 'db.sqlite3')
