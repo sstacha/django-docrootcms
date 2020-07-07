@@ -10,9 +10,10 @@ RUN apt-get update \
 
 WORKDIR /usr/src/app
 COPY requirements.txt ./
-COPY entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY docrootcms/container_scripts /usr/local/bin
 RUN ln -s /usr/local/bin/docker-entrypoint.sh / \
-    && pip install -r requirements.txt
+    && pip install -r requirements.txt \
+    && mkdir -p /usr/src/install
 
 # run the same thing as a new install
 RUN django-admin startproject docroot .
@@ -31,7 +32,7 @@ EXPOSE 8000
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 ## Uncomment to run a bash shell
-# CMD ["/bin/bash"]
+#CMD ["/bin/bash"]
 
 # BUILD
 # docker build -t django-docrootcms .

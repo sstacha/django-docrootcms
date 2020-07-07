@@ -69,3 +69,84 @@ python manage.py docrootcms update
 python manage.py makemigrations
 python manage.py migrate
 ```
+NOTE: THIS IS THE CONCEPT I THINK YOU SHOULD TAKE; UNTESTED SO FAR!
+
+### Docker Install / Deployment
+
+Install Docker [docs.docker.com: Get Docker](https://docs.docker.com/get-docker/) 
+
+#### First time: To get a blank website to check into GIT repo
+
+I recommend creating a websites directory inside your home directory (Ex: ~/websites/)
+
+```shell script
+cd ~/websites
+mkdir example.com_install
+cd example.com_install
+```
+
+NOTE: if linux you will need to sudo chown -R <yourusername>:<yourgroupname> website/ or set the ownership variable to your user:group ids
+```shell script
+docker run --rm --name django-docrootcms -p 8000:8000 -v $(pwd):/usr/src/install -e DOCROOTCMS_OWNERSHIP=1001:128 django-docrootcms "install.sh"
+```
+NOTE: if you are windows/mac you can omit the -e DOCROOTCMS_OWNERSHIP variable; it should not be needed
+```shell script
+docker run --rm --name django-docrootcms -p 8000:8000 -v $(pwd):/usr/src/install django-docrootcms "install.sh"
+```
+
+Create a new repo on github like example_com (include python gitignore, others optional) and clone into the current folder.
+Copy the files from install folder into the repo clone folder (not the install directory; just the files)
+Push them up to your site repo
+```shell script
+cd ~/websites/
+mkdir example_com # because pycharm only allows picking a project directory with numbers letters and underscores
+git clone <your website project url> .
+cp -a ../example.com_install/. .
+git add .
+git commit -m "initial blank website"
+git push
+```
+Now we will remove the install folder and we should be good to go
+```shell script
+rm -rf ../example.com_install/
+```
+rerun docker command binding our website directory; you can run git commands locally or edit files from the shared directory
+
+#### From now on: To run the container with our bound code directory managed by version control
+```shell script
+docker run --rm --name django-docrootcms -p 8000:8000 -v $(pwd):/usr/src/app django-docrootcms
+```
+
+
+
+### Docker server deployment
+For server deployments you will want docker to handle making sure your application stays up and running.  You will probably 
+want to use docker compoose.  Paste the following in your site directory example.com as docker-compose.yml:
+
+```yaml
+version: '3.4'
+services:
+  example_com:
+    # (to fix for development); do not use in production
+    # container_name: example_com
+    image: django-docrootcms
+    # restart: unless-stopped
+    # command: /bin/bash
+    env_file: 
+    #  - local.env
+    ports:
+      - 8000:8000
+    volumes:
+      # - ./data:/usr/src/app/data/
+      - type: bind
+        source: $PWD
+        target: /usr/src/app
+
+```
+
+Now you should be able to use docker-compose up and docker-compose down to start and stop the service
+
+To test: open a browser to http://localhost:8000/test/
+
+Tutorials & Guides: [ubercode.io: docroot cms tutorials](https://www.ubercode/io/products/docrootcms/tutorials)
+

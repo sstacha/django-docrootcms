@@ -15,10 +15,7 @@ echo "$(cat /etc/hosts)"
 echo "param 1: $1"
 
 function deploy() {
-  echo "git url: $DOCROOTCMS_GIT_URL"
-  if [[ ! -z $DOCROOTCMS_GIT_URL ]]; then
-    echo "would have deleted dir and loaded from $DOCROOTCMS_GIT_URL"
-  fi
+  deploy.sh
   python manage.py makemigrations
   python manage.py migrate
   python manage.py collectstatic --noinput

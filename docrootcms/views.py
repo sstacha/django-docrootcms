@@ -340,7 +340,7 @@ def render_page(request, template, module_name):
         # datafile = imp.load_source(module_name, datafile_name)
         # note changing datafile below to data
     except FileNotFoundError:
-        return None
+        data = None
     except Exception as ex:
         # logging.error(traceback.format_exc())
         data = None
