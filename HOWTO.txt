@@ -7,3 +7,12 @@ python setup.py sdist
 
 To Test:
 pip install --upgrade ~/projects/django_docrootcms/dist/django-docrootcms-0.22.tar.gz
+
+To Deploy:
+pip install --upgrade twine
+python setup.py sdist bdist_wheel
+python -m twine upload --repository testpypi dist/*
+python -m twine upload dist/*
+
+username = __token__
+password = <API KEY>
