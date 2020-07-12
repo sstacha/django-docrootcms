@@ -17,7 +17,7 @@ RUN ln -s /usr/local/bin/docker-entrypoint.sh / \
 
 # run the same thing as a new install
 RUN django-admin startproject docroot .
-COPY docrootcms ./docrootcms
+# COPY docrootcms ./docrootcms
 # todo: change above to env so it can be managed by pip instead of overriden?
 # instead of adding manually, we need to append a line to add the docrootcms to the installed apps
 RUN echo 'INSTALLED_APPS.append("docrootcms")' >> docroot/settings.py \
@@ -39,15 +39,15 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 # RUN
 # docker run --rm -it --name django-docrootcms -p 8000:8000 django-docrootcms
 # w/dir mount
-# docker run -it --env-file=.env --name django-docrootcms -p 8000:8000 -v $(pwd)/data:/usr/src/app/data django-docrootcms
+# docker run -it --env-file=.env --name django-docrootcms -p 8000:8000 -v $(pwd)/data:/usr/src/app/data sstacha/django-docrootcms
 # w/container named mount
-# docker run -it --env-file=.env --name django-docrootcms -p 8000:8000 -v django-docrootcms-data:/usr/src/app/data django-docrootcms
+# docker run -it --env-file=.env --name django-docrootcms -p 8000:8000 -v django-docrootcms-data:/usr/src/app/data sstacha/django-docrootcms
 # TO PUSH TO REPO
-# docker tag django-docrootcms sasonline/django-docrootcms
-# docker tag django-docrootcms sasonline/django-docrootcms:p3.8.3d3.0.7b2
+# docker tag django-docrootcms sstacha/django-docrootcms
+# docker tag django-docrootcms sstacha/django-docrootcms:p3.8.3d3.1.7b1.2
 # docker login
-# docker push sasonline/django-docrootcms
-# docker push sasonline/django-docrootcms:p3.8.3d3.0.7b2
+# docker push sstacha/django-docrootcms
+# docker push sstacha/django-docrootcms:p3.8.3d3.1.7b1.2
 
 # ----- OLD STUFF ------
 ## add our environment vars

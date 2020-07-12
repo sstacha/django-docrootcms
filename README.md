@@ -5,12 +5,12 @@ Docroot CMS is a django application for developers who build, manage and maintai
 > Because the code matters
 
 ## Dependencies
-* Python >= 3.6.6
-* django > 2
+* Python >= 3.6
+* django >= 2
 
 ## Install Instructions
 ### New Install
-NOTE: this is only slightly modifed from Django docs for easier website maintenance
+NOTE: this is only slightly modified from Django docs for easier website maintenance
 [Djano: Writing your first Django application](https://docs.djangoproject.com/en/3.0/intro/tutorial01/)
 
 cd to your start folder location (Ex: ~/websites/)
@@ -18,7 +18,8 @@ cd to your start folder location (Ex: ~/websites/)
 mkdir example.com
 cd example.com
 ```
-be sure to activate your virtual directory if necessary (Ex: pyenv local examplecom)
+***be sure to activate your virtual environment if necessary 
+(Ex: pyenv local examplecom) or (Ex: source env/bin/activate)***
 ```shell script
 pip install --upgrade pip
 pip install django
@@ -42,7 +43,7 @@ Tutorials & Guides: [ubercode.io: docroot cms tutorials](https://www.ubercode/io
 ### Existing Install
 NOTE: manage.py commands modify the docroot settings.py and urls.py files.  If this is not the projects settings.py and urls.py you will have to manually merge these changes yourself every time you upgrade the django-docroot-cms app.  This is not recommended.
 
-be sure to activate your virtual directory if needed
+***be sure to activate your virtual environment if needed***
 
 cd to your existing project directory (contains manage.py)
 ```shell script
@@ -85,13 +86,16 @@ mkdir example.com_install
 cd example.com_install
 ```
 
-NOTE: if linux you will need to sudo chown -R <yourusername>:<yourgroupname> website/ or set the ownership variable to your user:group ids
+NOTE: if you are on linux you will need to sudo chown -R <yourusername>:<yourgroupname> website/ or set the ownership variable to your user:group ids like the example below
+    you can find your ids by executing cat /etc/passwd and looking for the line with your username; the first number after the x is the userid the second is the default groupid
+    it will look something like this -> sstacha:x:1001:1001:Stephen Stacha,,,:/home/sstacha:/bin/bash.  If you want a different group use cat /etc/group and pick the group id you want.
+
 ```shell script
-docker run --rm --name django-docrootcms -p 8000:8000 -v $(pwd):/usr/src/install -e DOCROOTCMS_OWNERSHIP=1001:128 django-docrootcms "install.sh"
+docker run --rm --name django-docrootcms -p 8000:8000 -v $(pwd):/usr/src/install -e DOCROOTCMS_OWNERSHIP=1001:128 sstacha/django-docrootcms "install.sh"
 ```
 NOTE: if you are windows/mac you can omit the -e DOCROOTCMS_OWNERSHIP variable; it should not be needed
-```shell script
-docker run --rm --name django-docrootcms -p 8000:8000 -v $(pwd):/usr/src/install django-docrootcms "install.sh"
+```shell scriptyou can find your groupid
+docker run --rm --name django-docrootcms -p 8000:8000 -v $(pwd):/usr/src/install sstacha/django-docrootcms "install.sh"
 ```
 
 Create a new repo on github like example_com (include python gitignore, others optional) and clone into the current folder.
@@ -114,14 +118,14 @@ rerun docker command binding our website directory; you can run git commands loc
 
 #### From now on: To run the container with our bound code directory managed by version control
 ```shell script
-docker run --rm --name django-docrootcms -p 8000:8000 -v $(pwd):/usr/src/app django-docrootcms
+docker run --rm --name django-docrootcms -p 8000:8000 -v $(pwd):/usr/src/app sstacha/django-docrootcms
 ```
 
 
 
 ### Docker server deployment
 For server deployments you will want docker to handle making sure your application stays up and running.  You will probably 
-want to use docker compoose.  Paste the following in your site directory example.com as docker-compose.yml:
+want to use docker-compose.  Paste the following in your site directory example.com as docker-compose.yml:
 
 ```yaml
 version: '3.4'
@@ -129,7 +133,7 @@ services:
   example_com:
     # (to fix for development); do not use in production
     # container_name: example_com
-    image: django-docrootcms
+    image: sstacha/django-docrootcms
     # restart: unless-stopped
     # command: /bin/bash
     env_file: 
