@@ -72,7 +72,7 @@ python manage.py migrate
 ```
 NOTE: THIS IS THE CONCEPT I THINK YOU SHOULD TAKE; UNTESTED SO FAR!
 
-### Docker Install / Deployment
+### Docker Install / New Code (Bound directory)
 
 Install Docker [docs.docker.com: Get Docker](https://docs.docker.com/get-docker/) 
 
@@ -121,6 +121,18 @@ rerun docker command binding our website directory; you can run git commands loc
 docker run --rm --name django-docrootcms -p 8000:8000 -v $(pwd):/usr/src/app sstacha/django-docrootcms
 ```
 
+### Docker Install / Existing Code (Bound Directory)
+```shell script
+cd ~/websites/
+mkdir example_com
+git clone <your website project url> .
+```
+
+run docker command binding our website directory; you can run git commands locally or edit files from the shared directory
+#### From now on: To run the container with our bound code directory managed by version control
+```shell script
+docker run --rm --name django-docrootcms -p 8000:8000 -v $(pwd):/usr/src/app sstacha/django-docrootcms
+```
 
 
 ### Docker server deployment
