@@ -1,5 +1,7 @@
 # ------------------------ DOCROOT CMS SETTINGS ------------------------------------
 # add our different roots for static files to be served up
+import os
+
 try:
     STATIC_ROOT
 except NameError:
@@ -16,15 +18,15 @@ DOCROOT_ROOT = os.path.join(BASE_DIR, "docroot/files/")
 # add our docroot application to the installed apps and middleware initializations
 # NOTE: I am always seeing INSTALLED_APPS & MIDDLEWARE as a modifiable list; if changed to tuple this will fail!
 if 'docroot' not in INSTALLED_APPS and 'docrootcms' in INSTALLED_APPS:
-    docrootcms_idx = INSTALLED_APPS.index('docrootcms')
-    INSTALLED_APPS.insert(docrootcms_idx, 'docroot')
+    # insert docroot at the beginning so we can override admin/login templates in docroot; revert to below if not
+    INSTALLED_APPS.insert(0, 'docroot')
+    # docrootcms_idx = INSTALLED_APPS.index('docrootcms')
+    # INSTALLED_APPS.insert(docrootcms_idx, 'docroot')
 
 if 'docroot' in INSTALLED_APPS:
-    MIDDLEWARE += (
-        'docrootcms.middleware.DocrootFallbackMiddleware',
-    )
-else:
-    print("WARNING: 'docroot' was not found in INSTALLED_APPS so we are skipping setting up the middleware!")
+    MIDDLEWARE += ('docrootcms.middleware.DocrootFallbackMiddleware',)
+# else:
+#     print("WARNING: 'docroot' was not found in INSTALLED_APPS so we are skipping setting up the middleware!")
 
 # added for a problem in the way apache handles WSGI; would like to push this to web server at some point
 #   to eliminate 2 file checks for every request

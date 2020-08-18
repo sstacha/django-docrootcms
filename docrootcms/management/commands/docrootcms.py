@@ -46,7 +46,7 @@ class Command(BaseCommand):
             return 'docroot directory does not exist; can not update.  Did you mean to install it?'
         else:
             self.stdout.write(f'attempting to update docroot app and test files')
-            # get the directory from docroot-cms/docroot
+            # get the directory from docrootcms/docroot
             module_path = self.get_module_path()
             # we have a module path so now lets try and copy the docroot_settings_append and docroot_urls_append
             # settings.py changes
@@ -72,8 +72,12 @@ class Command(BaseCommand):
             shutil.copytree(module_template_path, resources_path / 'templates')
             self.stdout.write(self.style.SUCCESS(f"Copied {module_template_path} to {resources_path / 'templates'}"))
             module_test_path = module_path / 'docroot' / 'files' / 'test'
-            shutil.copytree(module_test_path, resources_path, dirs_exist_ok=True)
-            self.stdout.write(self.style.SUCCESS(f"Copied {module_test_path} to {resources_path}"))
+            try:
+                shutil.copytree(module_test_path, resources_path, dirs_exist_ok=True)
+                self.stdout.write(self.style.SUCCESS(f"Copied {module_test_path} to {resources_path}"))
+            except TypeError:
+                # < 3.8 thows type error because the dirs_exist_ok doesn't exist
+                print('WARNING: python < 3.8 required version; skipping the replacing of any test files...')
 
             return success_instructions
 
