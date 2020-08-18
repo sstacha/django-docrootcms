@@ -25,6 +25,8 @@ if 'docroot' not in INSTALLED_APPS and 'docrootcms' in INSTALLED_APPS:
 
 if 'docroot' in INSTALLED_APPS:
     MIDDLEWARE += ('docrootcms.middleware.DocrootFallbackMiddleware',)
+    if 'docroot/files/dt.inc' not in TEMPLATES[0]['DIRS'] or 'docroot/files/dt.inc/' not in TEMPLATES[0]['DIRS']:
+        TEMPLATES[0]['DIRS'].append('docroot/files/dt.inc')
 # else:
 #     print("WARNING: 'docroot' was not found in INSTALLED_APPS so we are skipping setting up the middleware!")
 

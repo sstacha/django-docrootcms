@@ -1,5 +1,6 @@
 # SEE: https://support.google.com/webmasters/answer/6062596?hl=en&ref_topic=6061961
 # NOTE: replace robots.txt on your site with this one in staging environment to prevent indexing when publicly accessible
+# NOTE: I think you might just need * and AdsBot-Google but I am including them all to be safe
 
 User-agent: *
 User-agent: AdsBot-Google
