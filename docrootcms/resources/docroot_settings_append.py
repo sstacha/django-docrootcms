@@ -110,9 +110,10 @@ if DEBUG:
 # NOTE: used for docker/local machine environment variable loading overrides
 import sys
 this_module = sys.modules[__name__]
+env_prefix = "DOCROOTCMS_"
 for k, v in os.environ.items():
-    if k.startswith("DOCROOTCMS_"):
-        attr_key = k[5:]
+    if k.upper().startswith(env_prefix):
+        attr_key = k[len(env_prefix):]
         if attr_key:
             # print (f"attempting to set {attr_key} to [{str(v)}]")
             setattr(this_module, attr_key, v)

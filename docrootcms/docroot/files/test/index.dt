@@ -10,29 +10,29 @@
 {#    {% for key, value in variables.items %}#}
 {#        {{ key }}:&nbsp;{{ value }}<br>#}
 {#    {% endfor %}#}
-    <p>
     <h4>cookies</h4>
+    <p>
     {% for key, value in request.COOKIES.items %}
         {{ key }}:&nbsp;{{ value }}<br>
     {% endfor %}
     </p>
-    <p>
     <h4>headers</h4>
+    <p>
 {#    {{ headers }}#}
     {% for key, value in headers.items %}
         {{ key }}:&nbsp;{{ value }}<br>
     {% endfor %}
     </p>
-    <p>
     <h4>user</h4>
+    <p>
     {{ user }}<br>
     </p>
-    <p>
     <h4>request ip</h4>
+    <p>
     {{ request_ip }}<br>
     </p>
-    <p>
     <h4>real ip</h4>
+    <p>
     {{ real_ip }}<br>
     </p>
 
@@ -47,10 +47,10 @@
 {#    {% for user in user_list %}#}
 {#        {{ user.username }}#}
 {#    {% endfor %}#}
+    <h4>testing DOCROOTCMS_BOOGER and DOCROOTCMS_BOOGER2 environment variable pass through</h4>
     <p>
-    <h4>testing DCMS_BOOGER and DCMS_BOOGER2 environment variable passthrough</h4>
     Note: To test create an environment variables for these set to a string and reload the page; Note the initial
-    DCMS_ prefix is stripped off when included in the settings variables.<br>
+    DOCROOTCMS_ prefix is stripped off when included in the settings variables.<br>
     <br>
     settings.BOOGER: {{ b }}<br>
     settings.BOOGER2: {{ b2 }}<br>
