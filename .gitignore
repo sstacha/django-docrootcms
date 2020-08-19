@@ -132,3 +132,7 @@ dmypy.json
 .idea/
 .code/
 
+# Example Site files for testing
+docroot/
+manage.py
+
