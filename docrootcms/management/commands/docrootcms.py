@@ -76,7 +76,7 @@ class Command(BaseCommand):
                 shutil.copytree(module_test_path, resources_path, dirs_exist_ok=True)
                 self.stdout.write(self.style.SUCCESS(f"Copied {module_test_path} to {resources_path}"))
             except TypeError:
-                # < 3.8 thows type error because the dirs_exist_ok doesn't exist
+                # < 3.8 throws type error because the dirs_exist_ok doesn't exist
                 print('WARNING: python < 3.8 required version; skipping the replacing of any test files...')
 
             return success_instructions
@@ -167,7 +167,8 @@ class Command(BaseCommand):
         # NOTE: we will assume if there is a docroot dir then we already installed
         if not os.path.exists('docroot'):
             self.stderr.write(self.style.ERROR('docroot application directory not found!'))
-            return 'Install docroot application according to instructions: https://github.com/sstacha/django-docroot-cms'
+            return 'Install docroot application according to instructions: ' \
+                   'https://github.com/sstacha/django-docroot-cms'
         else:
             self.stdout.write(f'installing docroot files...')
             # get the directory from docrootcms/docroot/files
@@ -189,6 +190,12 @@ class Command(BaseCommand):
             if not os.path.exists(local_path / 'data'):
                 os.makedirs(local_path / 'data')
                 self.stdout.write(self.style.SUCCESS(f"Created {local_path / 'data'}"))
+            if not os.path.exists(local_path / 'docroot' / 'templates'):
+                os.makedirs(local_path / 'docroot' / 'templates')
+                self.stdout.write(self.style.SUCCESS(f"Created {local_path / 'docroot' / 'templates'}"))
+            if not os.path.exists(local_path / 'docroot' / 'dt.inc'):
+                os.makedirs(local_path / 'docroot' / 'dt.inc')
+                self.stdout.write(self.style.SUCCESS(f"Created {local_path / 'docroot' / 'dt.inc'}"))
             return success_instructions
 
     def develop(self):
