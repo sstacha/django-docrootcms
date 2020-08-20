@@ -233,7 +233,9 @@ class ApiMeta:
                     # re-try and modify urls for logic on how to pull the correct template
                     self.find_api()
 
-            # finally if we still don't have a template and ends with / and APPEND_SLASH is set and False strip it
+            # finally if we still don't have an api and ends with / and APPEND_SLASH is set try without language prefix
+            # NOTE: this is needed because if APPEND_SLASH is set when django is finished processing we can have a
+            #   unexpected slash EX: request-> /test/index.json | after django -> /test/index.json/
             if not self.is_found and request.LANGUAGE_CODE and append_slash and self.original_path.endswith('/'):
                 lang = '/' + request.LANGUAGE_CODE + "/"
                 if self.original_path.startswith(lang):
@@ -242,14 +244,14 @@ class ApiMeta:
                     self.file_name = os.path.join(self.docroot_dir, self.path)
                     log.debug("language stripped file: " + str(self.file_name))
                     self.api_name = self.path
-                    # re-try and modify urls for logic on how to pull the correct template
+                    # re-try without the language code
                     self.find_api()
 
     # contains the logic for taking a request url and attempting to locate an api for it
     def find_api(self):
-        # if the url ends in .html then try to load a corresponding template from the docroot/files directory
+        # if the url ends in .json then try to load a corresponding api from the docroot/files directory
         if self.file_name.endswith(".json"):
-            # our url will request .html but we want to look for a .dt file (required for template processing)
+            # our url will request .json but we want to look for a .data.py file
             self.file_name = self.file_name[:-4]
             self.file_name += "data.py"
             if os.path.isfile(self.file_name):
@@ -283,6 +285,14 @@ class ApiMeta:
                         self.options.append(method)
                 # figure out the proper method to call (get, post trace etc) return method not supported if not there
                 request_method = self.request.method
+                # adding method overriding; very useful for testing or getting around proxies
+                # look for a GET or POST "_method" parameter and change the method we are looking for if found
+                override = self.request.GET.get('_method')
+                if not override:
+                    override = self.request.POST.get('_method')
+                if override:
+                    request_method = override.upper().strip()
+                    log.debug(f"Overriding method [{self.request.method}] with parameter value [{request_method}]")
                 try:
                     initmethod = getattr(data, request_method)
                 except AttributeError:
@@ -296,14 +306,18 @@ class ApiMeta:
                     else:
                         response = HttpResponse(content)
                         response['Allow'] = ",".join(self.options)
-                        response['Content-Type'] = "application/json"
+                        # response['Content-Type'] = "application/json"
                         return response
                 else:
                     log.error(
-                        "Found datafile [" + self.file_name + "] but didn't find method [" + self.request.method + "]!")
-                    response = HttpResponse("Method Not Supported [" + self.request.method + "]!", status=405)
+                        "Found datafile [" + self.file_name + "] but didn't find method [" + request_method + "]!")
+                    # if we don't support any methods lets return a not found instead of method not supported
+                    #   since there is no way to adjust the call to get it to work
+                    if not self.options:
+                        return None
+                    response = HttpResponse("Method Not Supported [" + request_method + "]!", status=405)
                     response['Allow'] = ",".join(self.options)
-                    response['Content-Type'] = "application/json"
+                    # response['Content-Type'] = "text/plain"
                     return response
 
     def is_found(self):

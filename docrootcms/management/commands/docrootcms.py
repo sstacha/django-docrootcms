@@ -77,7 +77,10 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f"Copied {module_test_path} to {resources_path}"))
             except TypeError:
                 # < 3.8 throws type error because the dirs_exist_ok doesn't exist
-                print('WARNING: python < 3.8 required version; skipping the replacing of any test files...')
+                # NOTE: trying to delete this every time so hopefully we don't need it anymore; if doesn't work go
+                #   back to printing the warning until later
+                shutil.copytree(module_test_path, resources_path)
+                # print('WARNING: python < 3.8 required version; skipping the replacing of any test files...')
 
             return success_instructions
 

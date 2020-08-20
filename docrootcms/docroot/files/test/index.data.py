@@ -28,7 +28,9 @@ def get_context(request):
 
 
 # web service definitions
-# NOTE: if not defined or commented will return 405-method not supported if called; no data file returns 404-not found
+# NOTE: if not defined or commented will return 405-method not supported if called
+#   if no data file or no web service methods defined returns 404-not found
+# BEST PRACTICE: GET does not update only reads and returns data
 def GET(request):
     ctx = get_context(request)
     now = datetime.now()
@@ -36,13 +38,17 @@ def GET(request):
     return JsonResponse(ctx, safe=False)
 #
 #
+# BEST PRACTICE: POST inserts/updates a single record and returns data/response (form post encoded body)
 # def POST(request):
 #     pass
 #
 #
+# BEST PRACTICE: PUT inserts/updates record(s) and returns data/response (various body formats like json/xml etc)
 # def PUT(request):
 #     pass
 #
 #
+# BEST PRACTICE: DELETE deletes (maybe soft delete like marking record deleted) record and returns data/response
+#   best practice is to pass just unique identifier not a lot complete data set
 # def DELETE(request):
 #     pass

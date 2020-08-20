@@ -1,6 +1,7 @@
 {% extends "page.dt" %}
 
 {% block title %}Debug{% endblock title %}
+{% block description %}Test page used for debugging cookies, headers, ip, realip, and settings variable pass through{% endblock %}
 
 {% block content %}
 
