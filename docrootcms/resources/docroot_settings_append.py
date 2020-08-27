@@ -1,19 +1,23 @@
 # ------------------------ DOCROOT CMS SETTINGS ------------------------------------
 # add our different roots for static files to be served up
 import os
+import pathlib
+import datetime
 
 try:
     STATIC_ROOT
 except NameError:
-    STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-# IMAGES_ROOT = os.path.join(BASE_DIR, "images/")
-# CACHED_ROOT = os.path.join(BASE_DIR, "cache/")
-DOCROOT_ROOT = os.path.join(BASE_DIR, "docroot/files/")
+    STATIC_ROOT = pathlib.Path(BASE_DIR, "static/")
+# IMAGES_ROOT = pathlib.Path(BASE_DIR, "images/")
+# CACHED_ROOT = pathlib.Path(BASE_DIR, "cache/")
+DOCROOT_ROOT = pathlib.Path(BASE_DIR, "docroot/files/")
 # STATICFILES_DIRS = (
 #     IMAGES_ROOT,
 #     CACHED_ROOT,
 #     DOCROOT_ROOT,
 # )
+MEDIA_URL = '/media/'
+MEDIA_ROOT = pathlib.Path(BASE_DIR, 'media')
 
 # add our docroot application to the installed apps and middleware initializations
 # NOTE: I am always seeing INSTALLED_APPS & MIDDLEWARE as a modifiable list; if changed to tuple this will fail!
@@ -27,6 +31,23 @@ if 'docroot' in INSTALLED_APPS:
     MIDDLEWARE += ('docrootcms.middleware.DocrootFallbackMiddleware',)
     if 'docroot/files/dt.inc' not in TEMPLATES[0]['DIRS'] or 'docroot/files/dt.inc/' not in TEMPLATES[0]['DIRS']:
         TEMPLATES[0]['DIRS'].append('docroot/files/dt.inc')
+    if 'markdownx' not in INSTALLED_APPS:
+        INSTALLED_APPS.append('markdownx')
+    if 'tagulous' not in INSTALLED_APPS:
+        INSTALLED_APPS.append('tagulous')
+    if 'docrootcms.contrib.blog' not in INSTALLED_APPS:
+        INSTALLED_APPS.append('docrootcms.contrib.blog')
+
+    MARKDOWNX_MARKDOWN_EXTENSIONS = ['markdown.extensions.extra']
+    MARKDOWNX_MEDIA_PATH = datetime.datetime.now().strftime('markdownx/%Y/%m/%d')
+    # would like to change the file upload path and name at time of upload
+    # tagulous serialization modules
+    SERIALIZATION_MODULES = {
+        'xml':    'tagulous.serializers.xml_serializer',
+        'json':   'tagulous.serializers.json',
+        'python': 'tagulous.serializers.python',
+        'yaml':   'tagulous.serializers.pyyaml',
+    }
 # else:
 #     print("WARNING: 'docroot' was not found in INSTALLED_APPS so we are skipping setting up the middleware!")
 
@@ -94,7 +115,7 @@ else:
 # OVERRIDING DATABASE LOCATION AND NAME FOR EASY SHARING
 # NOTE: we are only overriding for sqllite3.  Move the db block below this if you don't want any overrides.
 if 'default' in DATABASES and 'ENGINE' in DATABASES['default'] and DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3':
-    DATABASES['default']['NAME']=os.path.join(BASE_DIR, 'data', 'db.sqlite3')
+    DATABASES['default']['NAME']=pathlib.Path(BASE_DIR, 'data', 'db.sqlite3')
 
 # OVERRIDE THE DEFAULT CACHE TO DISABLE TEMPLATE CACHING IN DEV
 if DEBUG:
