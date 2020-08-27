@@ -7,6 +7,10 @@ Docroot CMS is a django application for developers who build, manage and maintai
 ## Dependencies
 * Python >= 3.6
 * django >= 2
+* django-markdownx
+* django-docrootcms-tagulous
+
+NOTE: django-docrootcms-tagulous will only be required until the official django-tagulous supports django 3
 
 ## Install Instructions
 ### New Install
@@ -24,9 +28,11 @@ cd example.com
 pip install --upgrade pip
 pip install django
 django-admin startproject docroot .
+pip install markdownx
+pip install django-docrootcms-tagulous
 pip install django-docrootcms
 ```
-in docroot/settings.py add docrootcms to the installed apps block
+in docroot/settings.py add docrootcms to the beginning of the installed apps block
 ```shell script
 python manage.py docrootcms install
 python manage.py docrootcms update

@@ -1,8 +1,8 @@
 Django
+django-markdownx
+django-docrootcms-tagulous
 django-docrootcms
 
 # requests
 # mysqlclient
 # django-import-export
-# django-markdownx
-# django-docrootcms-tagulous
