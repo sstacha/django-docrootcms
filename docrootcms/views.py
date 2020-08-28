@@ -30,7 +30,7 @@ log = logging.getLogger("cms.views")
 def static(request):
     docroot_dir = getattr(settings, "DOCROOT_ROOT", "")
     use_static = getattr(settings, "USE_STATIC_FORBIDDEN", False)
-    log.debug("docroot dir: " + docroot_dir)
+    log.debug("docroot dir: " + str(docroot_dir))
     path = request.path_info
     if path.startswith("/"):
         path = path[1:]
@@ -89,7 +89,7 @@ class TemplateMeta:
         self.is_found = False
         self.request = request
         self.docroot_dir = getattr(settings, "DOCROOT_ROOT", "")
-        log.debug("docroot dir: " + self.docroot_dir)
+        log.debug("docroot dir: " + str(self.docroot_dir))
         self.original_path = request.path_info.strip()
         self.path = self.original_path
         if self.path.startswith("/"):
@@ -146,13 +146,13 @@ class TemplateMeta:
             self.template_name = self.template_name[:-4]
             self.template_name += "dt"
             if os.path.isfile(self.file_name):
-                log.debug("found file: " + self.file_name)
+                log.debug("found file: " + str(self.file_name))
                 self.is_found = True
 
         elif self.file_name.endswith('/'):
             self.file_name += "index.dt"
             if os.path.isfile(self.file_name):
-                log.debug("found file: " + self.file_name)
+                log.debug("found file: " + str(self.file_name))
                 self.module_name += "index.html"
                 self.template_name += "index.dt"
                 self.is_found = True
@@ -160,14 +160,14 @@ class TemplateMeta:
         else:
             self.file_name += ".dt"
             if os.path.isfile(self.file_name):
-                log.debug("found file: " + self.file_name)
+                log.debug("found file: " + str(self.file_name))
                 self.module_name += ".html"
                 self.template_name += ".dt"
                 self.is_found = True
 
     def render(self):
         if self.is_found:
-            log.debug("opening file: " + self.file_name)
+            log.debug("opening file: " + str(self.file_name))
             fp = codecs.open(self.file_name, "r", encoding='utf-8')
             log.debug("loading template...")
             # template = Template(fp.read().encode('utf-8'), Origin(self.file_name), self.template_name)
@@ -202,7 +202,7 @@ class ApiMeta:
         self.is_found = False
         self.request = request
         self.docroot_dir = getattr(settings, "DOCROOT_ROOT", "")
-        log.debug("docroot dir: " + self.docroot_dir)
+        log.debug("docroot dir: " + str(self.docroot_dir))
         self.original_path = request.path_info.strip()
         self.path = self.original_path
         if self.path.startswith("/"):
