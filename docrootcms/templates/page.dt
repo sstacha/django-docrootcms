@@ -19,6 +19,11 @@
 {#    <link href="/mdb/css/bootstrap.min.css" rel="stylesheet">#}
     <link href="/mdb/css/mdb.min.css" rel="stylesheet">
     <!---->
+    <style>
+        .bg-site-primary {background-color: #3f51b5; color: #fff}
+        .bg-site-secondary {background-color: #3f51b5;}
+        .bg-site-primary:hover, bg-site-secondary:hover {color: #f7f7f7;}
+    </style>
 {% endblock %}
 
 {% block page-js %}
