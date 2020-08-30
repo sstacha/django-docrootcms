@@ -1,5 +1,7 @@
 include LICENSE
 recursive-include docrootcms/static *
 recursive-include docrootcms/templates *
+recursive-include docrootcms/contrib/blog/templates *
+recursive-include docrootcms/contrib/blog/templatetags *
 recursive-include docrootcms/docroot *
 recursive-include docrootcms/container_scripts *
