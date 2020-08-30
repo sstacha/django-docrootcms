@@ -28,7 +28,7 @@ cd example.com
 pip install --upgrade pip
 pip install django
 django-admin startproject docroot .
-pip install markdownx
+pip install django-markdownx
 pip install django-docrootcms-tagulous
 pip install django-docrootcms
 ```
