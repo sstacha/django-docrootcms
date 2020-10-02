@@ -31,16 +31,17 @@ if 'docroot' in INSTALLED_APPS:
     MIDDLEWARE += ('docrootcms.middleware.DocrootFallbackMiddleware',)
     if 'docroot/files/dt.inc' not in TEMPLATES[0]['DIRS'] or 'docroot/files/dt.inc/' not in TEMPLATES[0]['DIRS']:
         TEMPLATES[0]['DIRS'].append('docroot/files/dt.inc')
+    if 'docrootcms.contrib.blog' not in INSTALLED_APPS:
+        INSTALLED_APPS.append('docrootcms.contrib.blog')
     if 'markdownx' not in INSTALLED_APPS:
         INSTALLED_APPS.append('markdownx')
     if 'tagulous' not in INSTALLED_APPS:
         INSTALLED_APPS.append('tagulous')
-    if 'docrootcms.contrib.blog' not in INSTALLED_APPS:
-        INSTALLED_APPS.append('docrootcms.contrib.blog')
 
     MARKDOWNX_MARKDOWN_EXTENSIONS = ['markdown.extensions.extra']
-    MARKDOWNX_MEDIA_PATH = datetime.datetime.now().strftime('markdownx/%Y/%m/%d')
-    # would like to change the file upload path and name at time of upload
+    MARKDOWNX_MEDIA_PATH = datetime.datetime.now().strftime('markdownx/%Y')
+    # sas 2020-09-27 : new setting to use the original image name instead of the default uuid ones
+    MARKDOWNX_USE_ORIGINAL_IMAGE_NAME = True
     # tagulous serialization modules
     SERIALIZATION_MODULES = {
         'xml':    'tagulous.serializers.xml_serializer',
