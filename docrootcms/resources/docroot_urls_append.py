@@ -11,7 +11,6 @@ urlpatterns += [
     # sas 2020-09-27 : override the markdownx url and apply our overridden view/form instead
     # NOTE: don't forget to copy the js changes into static for transferring the new field to the view
     path('markdownx/upload/', MarkdownImageUploadView.as_view(), name='markdownx_upload'),
-
     path('markdownx/', include('markdownx.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
