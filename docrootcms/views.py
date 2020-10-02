@@ -4,7 +4,7 @@ import mimetypes
 import importlib.util
 import json
 import codecs
-
+import base64
 from django.conf import settings
 # from django.template import Context
 from django.template import Template, Origin, RequestContext
@@ -17,12 +17,19 @@ from django.core import serializers
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-import base64
+
+from .forms import MarkdownImageUploadForm
+from markdownx.views import ImageUploadView
 
 from .forms import LoginForm
 from .models import Content
 
 log = logging.getLogger("cms.views")
+
+
+# Markdownx overridden views to have images store the way we want
+class MarkdownImageUploadView(ImageUploadView):
+    form_class = MarkdownImageUploadForm
 
 
 # This view is called from DocrootFallbackMiddleware.process_response

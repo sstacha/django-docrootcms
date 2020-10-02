@@ -133,6 +133,9 @@ dmypy.json
 .code/
 
 # Example Site files for testing
-docroot/
+/docroot/
+/media/
 manage.py
-markdownx/
+# /markdownx/
+/static/
+

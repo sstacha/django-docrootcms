@@ -4,8 +4,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User
-from markdownx.models import MarkdownxField
 from tagulous.models import TagField, TagModel, TagTreeModel
+from docrootcms.models import ContentMarkdownField
 
 
 # BLOG MODELS
@@ -59,9 +59,9 @@ class MarkdownPost(models.Model):
     slug = models.SlugField(max_length=250,
                             unique=True,
                             help_text='SEO Friendly name that is unique for use in URL')
-    teaser = MarkdownxField(null=True, blank=True, help_text=mark_safe(
+    teaser = ContentMarkdownField(null=True, blank=True, field_image_prefix='post/teaser', help_text=mark_safe(
         'Markdown Reference: <a href="https://commonmark.org/help/">https://commonmark.org/help/</a>'))
-    content = MarkdownxField(help_text=mark_safe(
+    content = ContentMarkdownField(field_image_prefix='post/content', help_text=mark_safe(
         'Markdown Reference: <a href="https://commonmark.org/help/">https://commonmark.org/help/</a>'))
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     # image = FilerImageField(null=True, blank=True)

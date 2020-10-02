@@ -21,4 +21,7 @@ urlpatterns = [
     path('login', views.LoginFormView.as_view(), name="cms_login"),
     path('logout', views.LogoutView.as_view(), name="cms_logout"),
     path('auth', views.AuthenticateView.as_view(), name="cms_authenticate"),
+    # sas 2020-09-27 : attempting to override the markdownx url and apply our overridden view/form instead
+    # NOTE: don't forget to copy the js changes into static for transferring the new field to the view
+    path('markdownx/upload/', views.MarkdownImageUploadView.as_view(), name='markdownx_upload')
 ]
