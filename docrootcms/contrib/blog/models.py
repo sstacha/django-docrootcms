@@ -54,7 +54,19 @@ class BlogProperty(TagModel):
         verbose_name_plural = "Blog properties"
 
 
+class MarkdownPostManager(models.Manager):
+    def live(self):
+        queryset = self.get_queryset()
+        now = timezone.now()
+        return queryset.filter(publish_date__lte=now)
+    #
+    # def published_recently(self):
+    #     queryset = self.get_queryset()
+    #     return queryset.order_by('-publish_date')
+
+
 class MarkdownPost(models.Model):
+    objects = MarkdownPostManager()
     title = models.CharField(max_length=250, unique=True)
     slug = models.SlugField(max_length=250,
                             unique=True,

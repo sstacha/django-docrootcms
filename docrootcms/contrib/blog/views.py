@@ -1,5 +1,5 @@
 from django.views import generic
-from django.utils import timezone
+# from django.utils import timezone
 from .models import MarkdownPost
 import logging
 
@@ -8,8 +8,8 @@ log = logging.getLogger("blog.views")
 
 class PostList(generic.ListView):
     model = MarkdownPost
-    today = timezone.now()
-    queryset = MarkdownPost.objects.filter(publish_date__lte=today).order_by('-modified_date')
+    # today = timezone.now()
+    queryset = MarkdownPost.objects.live().order_by('-modified_date')
     template_name = 'docrootcms_blog/index.html'
 
 
