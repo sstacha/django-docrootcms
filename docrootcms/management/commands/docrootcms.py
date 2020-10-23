@@ -71,7 +71,7 @@ class Command(BaseCommand):
             module_template_path = module_path / 'templates'
             shutil.copytree(module_template_path, resources_path / 'templates')
             self.stdout.write(self.style.SUCCESS(f"Copied {module_template_path} to {resources_path / 'templates'}"))
-            module_test_path = module_path / 'docroot' / 'files' / 'test'
+            module_test_path = module_path / 'install' / 'files' / 'test'
             try:
                 shutil.copytree(module_test_path, resources_path, dirs_exist_ok=True)
                 self.stdout.write(self.style.SUCCESS(f"Copied {module_test_path} to {resources_path}"))
@@ -176,7 +176,7 @@ class Command(BaseCommand):
             self.stdout.write(f'installing docroot files...')
             # get the directory from docrootcms/docroot/files
             module_path = self.get_module_path()
-            module_docroot_files_path = module_path / 'docroot' / 'files'
+            module_docroot_files_path = module_path / 'install' / 'files'
             local_path = pathlib.Path()
             local_docroot_files_path = local_path / 'docroot' / 'files'
             print(f'local path: {local_path}')

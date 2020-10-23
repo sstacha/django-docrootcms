@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(name='django-docrootcms',
-      version='1.27',
+      version='1.29',
       description='The missing app for developers creating and maintaining websites',
       long_description=long_description,
       long_description_content_type="text/markdown",
@@ -12,7 +12,7 @@ setuptools.setup(name='django-docrootcms',
       author='Steve Stacha',
       author_email='sstacha@gmail.com',
       license='MIT',
-      packages=setuptools.find_packages(),
+      packages=setuptools.find_packages(exclude=["docroot"]),
       include_package_data=True,
       zip_safe=False,
       classifiers=[

@@ -10,13 +10,17 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <h2 class="card-title">{{ post.title }}</h2>
-                    <p class="card-text text-muted h6">{{ post.author }}
+                    <p class="card-text text-muted h6">{{ post.author|default_if_none:'Staff' }}
                         {% time_since post.publish_date as elapsed_time %}
                         {% if elapsed_time %}
                         • {{ elapsed_time }} ago</p>
                         {% endif %}
-                    <p class="card-text">{{post.teaser | markdown_to_html | safe }}</p>
-                    <a href="{% url 'blog_detail' post.slug  %}" class="btn bg-site-primary float-right">Read More &rarr;</a>
+                    {% if post.teaser %}
+                        <p class="card-text">{{post.teaser | markdown_to_html | safe }}</p>
+                        <a href="{% url 'blog_detail' post.slug  %}" class="btn bg-site-primary float-right">Read More &rarr;</a>
+                    {% else %}
+                        <p class="card-text">{{post.content | markdown_to_html | safe }}</p>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}

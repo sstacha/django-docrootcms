@@ -22,7 +22,7 @@ cd to your start folder location (Ex: ~/websites/)
 mkdir example.com
 cd example.com
 ```
-***be sure to activate your virtual environment if necessary 
+NOTE: ***be sure to activate your virtual environment if necessary 
 (Ex: pyenv local examplecom) or (Ex: source env/bin/activate)***
 ```shell script
 pip install --upgrade pip
@@ -39,13 +39,22 @@ python manage.py docrootcms update
 python manage.py makemigrations
 python manage.py migrate
 python manage.py collectstatic
+python manage.py createsuperuser
 python manage.py runserver 0.0.0.0:8000
 ```
+NOTE: to use the admin you must create a superuser with the command above
 
-To test: open a browser to http://localhost:8000/test/
+Test Urls:
+- http://localhost:8000/test/
+- http://localhost:8000/admin/
 
-Tutorials & Guides: [ubercode.io: docroot cms tutorials](https://www.ubercode/io/products/docrootcms/tutorials)
+Tutorials & Guides: 
+- CMS
+    - [ubercode.io: docroot cms tutorials](https://www.ubercode/io/products/docrootcms/tutorials)
+- Django
+    - [django tutorial (polls app)](https://docs.djangoproject.com/en/3.1/intro/tutorial01/)
 
+NOTE: remember the cms is simply a django app; you can follow any django tutorial to add your own django applications right beside it.  You can skip to the section on creating the polls app since we just did the install steps.
 
 ### Existing Install
 NOTE: manage.py commands modify the docroot settings.py and urls.py files.  If this is not the projects settings.py and urls.py you will have to manually merge these changes yourself every time you upgrade the django-docroot-cms app.  This is not recommended.

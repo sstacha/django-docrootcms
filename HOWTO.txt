@@ -2,11 +2,13 @@ From:
 https://docs.djangoproject.com/en/3.0/intro/reusable-apps/
 
 dont forget to increment the version number in setup.py
+NOTE: temporarily move the docroot app to trash using file manager so it doesn't build! then restore after!
+NOTE: build using generic pyenv
 delete any dist or eggs
 python setup.py sdist
 
 To Test:
-pip install --upgrade ~/projects/django_docrootcms/dist/django-docrootcms-1.27.tar.gz
+pip install --upgrade ~/projects/django_docrootcms/dist/django-docrootcms-1.29.tar.gz
 
 To Deploy:
 pip install --upgrade twine

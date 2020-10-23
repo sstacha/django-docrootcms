@@ -6,7 +6,7 @@
     <div class="col card mb-4 mt-3 left top">
       <div class="card-body">
         <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
-        <p class=" text-muted">{{ object.author }}
+        <p class=" text-muted">{{ post.author|default_if_none:'Staff' }}
             {% time_since object.publish_date as elapsed_time %}
             {% if elapsed_time %} • {{elapsed_time}} ago{% endif %}</p>
         <p class="card-text ">{{ object.content | markdown_to_html | safe }}</p>
