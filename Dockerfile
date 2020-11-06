@@ -32,7 +32,7 @@ EXPOSE 8000
 
 # entrypoint will setup our dns for linux, copy files from git if DOCROOTCMS_GIT_URL is passed, makemigrations,
 #   migrate, and collect static
-#ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 ## Uncomment to run a bash shell
 #CMD ["/bin/bash"]
@@ -47,10 +47,10 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 # docker run -it --env-file=.env --name django-docrootcms -p 8000:8000 -v django-docrootcms-data:/usr/src/app/data sstacha/django-docrootcms
 # TO PUSH TO REPO
 # docker tag django-docrootcms sstacha/django-docrootcms
-# docker tag django-docrootcms sstacha/django-docrootcms:p3.8.3d3.1.7b1.29
+# docker tag django-docrootcms sstacha/django-docrootcms:p3.8.3d3.1.7b1.30
 # docker login
 # docker push sstacha/django-docrootcms
-# docker push sstacha/django-docrootcms:p3.8.3d3.1.7b1.29
+# docker push sstacha/django-docrootcms:p3.8.3d3.1.7b1.30
 
 # ----- OLD STUFF ------
 ## add our environment vars

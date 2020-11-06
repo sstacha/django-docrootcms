@@ -1,0 +1,12 @@
+{% extends "_cms.dt" %}
+
+{# NOTE: RECOMMENDED BEST PRACTICE -> put any site wide page level overrides here   #}
+
+{% block page-css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block page-js %}
+    {{ block.super }}
+{% endblock %}
+

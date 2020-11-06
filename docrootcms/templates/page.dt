@@ -1,4 +1,4 @@
-{% extends "_cms.dt" %}
+{% extends "_site.dt" %}
 {# BASIC STRUCTURE FOR A PAGE; PAGE LEVEL OVERRIDES SHOULD HAPPEN HERE THEN NON-PAGE LEVEL at .dt AS A RULE #}
 {% block title %}{{ title|default_if_none:"Page Title" }}{% endblock %}
 {% block description %}{{ description|default_if_none:"Page Description" }}{% endblock %}

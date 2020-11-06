@@ -1,8 +1,11 @@
 {% extends "_base.dt" %}
 {% load static %}
 
+{# NOTE: RECOMMENDED BEST PRACTICE -> do not remove or change settings in this file.   #}
+{#  If you don't want any css functionality you can simply copy _global and extend _base.dt instead of this file #}
+{#  If you want to change stuff in the blocks copy this to _global after doing above and change what you want  #}
+# ------------------------ DOCROOT CMS GLOBAL CSS ------------------------------------
 {# contains conditional css and js functionality for the cms to work if a user is logged in #}
-{# BLOCKS SHOULD BE OVERRIDDEN HERE FOR ANYTHING WE WANT ALL DERIVED PAGES TO USE ON OUR SITE #}
 {# PAGE DERIVITIVES SHOULD ALWAYS CALL SUPER SO THESE ARE INCLUDED UNLESS THERE IS A GOOD REASON NOT TO #}
 
 {# Copy title into head_title, meta-title & apple-mobile-web-app-title from 1_base.dt #}
@@ -52,3 +55,6 @@
         });
     </script>
 {% endblock %}
+# ------------------------ DOCROOT CMS GLOBAL CSS ------------------------------------
+
+{# BLOCKS SHOULD BE OVERRIDDEN HERE FOR ANYTHING WE WANT ALL DERIVED PAGES TO USE ON OUR SITE #}
