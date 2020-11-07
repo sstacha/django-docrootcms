@@ -47,10 +47,10 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 # docker run -it --env-file=.env --name django-docrootcms -p 8000:8000 -v django-docrootcms-data:/usr/src/app/data sstacha/django-docrootcms
 # TO PUSH TO REPO
 # docker tag django-docrootcms sstacha/django-docrootcms
-# docker tag django-docrootcms sstacha/django-docrootcms:p3.8.3d3.1.7b1.30
+# docker tag django-docrootcms sstacha/django-docrootcms:p3.8.3d3.1.3b2.0
 # docker login
 # docker push sstacha/django-docrootcms
-# docker push sstacha/django-docrootcms:p3.8.3d3.1.7b1.30
+# docker push sstacha/django-docrootcms:p3.8.3d3.1.3b2.0
 
 # ----- OLD STUFF ------
 ## add our environment vars
