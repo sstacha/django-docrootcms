@@ -32,7 +32,7 @@ pip install django-markdownx
 pip install django-docrootcms-tagulous
 pip install django-docrootcms
 ```
-NOTE: **in docroot/settings.py add docrootcms to the beginning of the installed apps block
+NOTE: ***in docroot/settings.py add docrootcms to the beginning of the installed apps block
 ```shell script
 python manage.py docrootcms install
 python manage.py docrootcms update
