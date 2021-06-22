@@ -3,8 +3,8 @@
 {% block html-tag %}<html class="no-js" lang="en">{% endblock %}
 {% block head-tag %}<head>{% endblock %}
 <title>{% block head_title %}{% endblock %}</title>
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="alternate icon" href="/favicon.ico">
+{% block site-icon %}<link rel="icon" type="image/svg+xml" href="/favicon.svg">{% endblock %}
+{% block site-alternate-icon %}<link rel="alternate icon" href="/favicon.ico">{% endblock %}
 {# excuting short script to replace no-js in html with js for use in css below #}
 <script>{# document.documentElement.className = document.documentElement.className.replace("no-js","js"); #}
 document.documentElement.classList.remove('no-js');

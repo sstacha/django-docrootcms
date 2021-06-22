@@ -130,7 +130,7 @@ dmypy.json
 
 # IDE Project files (specific to developer env)
 .idea/
-.code/
+.vscode/
 
 # Example Site files for testing
 /docroot/
