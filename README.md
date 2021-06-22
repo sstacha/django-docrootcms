@@ -1,7 +1,7 @@
 # django-docrootcms
 Docroot CMS is a django application for developers who build, manage and maintain websites.  This app takes the simplicity of working with a PHP docroot, the fun of working with Python and fully leverages the power of Django for adding website application functionality.
 
-[ubercode.io: docroot cms](https://www.ubercode/io/products/docrootcms)
+[ubercode.io: docroot cms](https://www.ubercode.io/products/#docrootcms_overview)
 > Because the code matters
 
 ## Dependencies
@@ -32,7 +32,7 @@ pip install django-markdownx
 pip install django-docrootcms-tagulous
 pip install django-docrootcms
 ```
-in docroot/settings.py add docrootcms to the beginning of the installed apps block
+NOTE: ***in docroot/settings.py add docrootcms to the beginning of the installed apps block***
 ```shell script
 python manage.py docrootcms install
 python manage.py docrootcms update
