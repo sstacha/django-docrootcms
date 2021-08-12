@@ -22,7 +22,7 @@ cd to your start folder location (Ex: ~/websites/)
 mkdir example.com
 cd example.com
 ```
-NOTE: ***be sure to activate your virtual environment if necessary 
+***MANUAL STEP: (optional but recommended) be sure to activate your virtual environment if necessary 
 (Ex: pyenv local examplecom) or (Ex: source env/bin/activate)***
 ```shell script
 pip install --upgrade pip
@@ -32,7 +32,7 @@ pip install django-markdownx
 pip install django-docrootcms-tagulous
 pip install django-docrootcms
 ```
-NOTE: ***in docroot/settings.py add docrootcms to the beginning of the installed apps block***
+***MANUAL STEP: (required) in docroot/settings.py add docrootcms to the beginning of the installed apps block***
 ```shell script
 python manage.py docrootcms install
 python manage.py docrootcms update
