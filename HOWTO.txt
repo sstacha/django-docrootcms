@@ -8,7 +8,7 @@ delete any dist or eggs
 python setup.py sdist
 
 To Test:
-pip install --upgrade ~/projects/django_docrootcms/dist/django-docrootcms-2.2.tar.gz
+pip install --upgrade ~/projects/django_docrootcms/dist/django-docrootcms-2.4.tar.gz
 
 To Deploy:
 pip install --upgrade twine
