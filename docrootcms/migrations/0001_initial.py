@@ -14,9 +14,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Content',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uri', models.CharField(blank=True, max_length=2000)),
-                ('element_id', models.CharField(blank=True, max_length=500, null=True)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('uri', models.CharField(blank=True, max_length=600)),
+                ('element_id', models.CharField(blank=True, max_length=150, null=True)),
                 ('content', models.TextField()),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
                 ('date_modified', models.DateTimeField(auto_now=True)),

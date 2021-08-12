@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(name='django-docrootcms',
-      version='2.2',
+      version='2.4',
       description='The missing app for developers creating and maintaining websites',
       long_description=long_description,
       long_description_content_type="text/markdown",
@@ -25,7 +25,7 @@ setuptools.setup(name='django-docrootcms',
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: Content Management System",
         "Topic :: Internet :: WWW/HTTP :: Site Management",
       ],
-      python_requires='>=3.6',
+      python_requires='>=3.8',
       install_requires=[
           'django',
       ],

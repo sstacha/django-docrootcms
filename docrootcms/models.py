@@ -36,7 +36,8 @@ class ContentMarkdownField(MarkdownxField):
 
 # cms models
 class Content(models.Model):
-    uri = models.CharField(max_length=700, blank=True)
+    id = models.BigAutoField(auto_created=True, primary_key=True, verbose_name='ID')
+    uri = models.CharField(max_length=600, blank=True)
     element_id = models.CharField(max_length=150, null=True, blank=True)
     content = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True, editable=False)

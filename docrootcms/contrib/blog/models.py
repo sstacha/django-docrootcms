@@ -67,6 +67,7 @@ class MarkdownPostManager(models.Manager):
 
 class MarkdownPost(models.Model):
     objects = MarkdownPostManager()
+    id = models.BigAutoField(auto_created=True, primary_key=True, verbose_name='ID')
     title = models.CharField(max_length=250, unique=True)
     slug = models.SlugField(max_length=250,
                             unique=True,
@@ -121,6 +122,7 @@ class MarkdownPost(models.Model):
 
 # SIMPLE POST IS JUST TEXT WITH NO CATEGORIES OR CLASSIFICATIONS
 # class SimplePost(models.Model):
+#     id = models.BigAutoField(auto_created=True, primary_key=True, verbose_name='ID')
 #     title = models.CharField(max_length=250, unique=True)
 #     slug = models.SlugField(max_length=250,
 #                             unique=True,

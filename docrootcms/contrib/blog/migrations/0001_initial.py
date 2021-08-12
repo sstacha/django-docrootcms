@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BlogCategory',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255, unique=True)),
                 ('slug', models.SlugField()),
                 ('count', models.IntegerField(default=0, help_text='Internal counter of how many times this tag is in use')),
@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BlogProperty',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255, unique=True)),
                 ('slug', models.SlugField()),
                 ('count', models.IntegerField(default=0, help_text='Internal counter of how many times this tag is in use')),
@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BlogTag',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255, unique=True)),
                 ('slug', models.SlugField()),
                 ('count', models.IntegerField(default=0, help_text='Internal counter of how many times this tag is in use')),
@@ -69,7 +69,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='MarkdownPost',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=250, unique=True)),
                 ('slug', models.SlugField(help_text='SEO Friendly name that is unique for use in URL', max_length=250, unique=True)),
                 ('teaser', markdownx.models.MarkdownxField(blank=True, help_text='Markdown Reference: <a href="https://commonmark.org/help/">https://commonmark.org/help/</a>', null=True)),
