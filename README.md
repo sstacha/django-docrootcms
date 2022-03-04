@@ -5,7 +5,7 @@ Docroot CMS is a django application for developers who build, manage and maintai
 > Because the code matters
 
 ## Dependencies
-* Python >= 3.6
+* Python >= 3.8
 * django >= 2 < 4
 * django-markdownx
 * django-tagulous
