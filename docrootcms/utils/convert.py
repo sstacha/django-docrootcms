@@ -3,15 +3,71 @@ Basic conversion utilities
 """
 import json
 import re
+import pytz
 # import requests
 import xml.etree.ElementTree as Etree
+
+from datetime import datetime
 from collections import defaultdict
 from collections import namedtuple
+from django.conf import settings
 from django.db.models.fields.related import ManyToManyField
-# from django.utils.html import strip_tags
 
 TRUE_VALUES = ["1", 1, "y", "Y", True, "t", "T", "TRUE", "True", "true", "YES", "Yes", "yes", "ON", "On", "on"]
-FALSE_VALUES = ["0", 0, "n", "N", False, "f", "F", "False", "false", "No", "no"]
+FALSE_VALUES = ["0", 0, "n", "N", False, "f", "F", "False", "false", "No", "no", None]
+DEFAULT_TIMEZONE = getattr(settings, "DEFAULT_TIMEZONE", pytz.timezone('America/Chicago'))
+
+
+# -------- date conversions --------
+def to_iso8601(value=None, tz=DEFAULT_TIMEZONE):
+    if not value:
+        value = datetime.now(tz)
+    if not value.tzinfo:
+        value = tz.localize(value)
+    _value = value.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
+    return _value[:-8] + _value[-5:]  # Remove microseconds
+
+
+def from_iso8601(value=None, tz=DEFAULT_TIMEZONE):
+    if not isinstance(value, str) and len(value.strip()) > 0:
+        return None
+    # remove colons and dashes EXCEPT for the dash indicating + or - utc offset for the timezone
+    conformed_timestamp = re.sub(r"[:]|([-](?!((\d{2}[:]\d{2})|(\d{4}))$))", "", value)
+    _value = None
+    try:
+        _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M%S.%f%z")
+    except ValueError:
+        try:
+            _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M%S.%f")
+        except ValueError:
+            try:
+                _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M%S")
+            except ValueError:
+                try:
+                    _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M")
+                except ValueError:
+                    try:
+                        _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M")
+                    except ValueError:
+                        try:
+                            _value = datetime.strptime(conformed_timestamp, "%Y%m%d")
+                        except ValueError:
+                            raise ValueError(f"DateTime string [{value}] did not match an expected pattern.")
+    if _value and not _value.tzinfo:
+        _value = tz.localize(_value)
+    return _value
+
+
+def to_date(value=None, tz=DEFAULT_TIMEZONE):
+    """
+    Convert string to python date.  Currently, only concerned about iso8601 type formats.  None returns current date.
+    :param value: string value for date (currently only iso8601)
+    :param tz: pytz timezone (defaults to setting DEFAULT_TIMEZONE or 'America/Chicago')
+    :return: python date or original value
+    """
+    if value is None:
+        return datetime.now(tz)
+    return from_iso8601(value, tz)
 
 
 # -------- primitive conversions --------
@@ -19,17 +75,25 @@ def to_bool(value):
     """
     Convert <value> to boolean.  Mainly handles returning false values passed as parameters which
     would otherwise return a truthy value.  Returns false if None or FALSE_VALUES, otherwise
-    returns normal truthy value.
+    returns normal boolean truthy value conversion.
     :param value: expects int, bool, string or None
     :return: python True/False value
     """
-    if value is not None:
-        # note: need this line because strings and numbers are truthy and will return true
-        if value in FALSE_VALUES:
-            return False
-        if value:
-            return True
-    return False
+    # note: need this line because strings and numbers are truthy and will return true
+    if value in FALSE_VALUES:
+        return False
+    return bool(value)
+
+
+def to_none(value):
+    """
+    Convert a string "None" value to python None.
+    :param value: value to be converted
+    :return: None if string "None" is passed otherwise what was passed in
+    """
+    if isinstance(value, str) and value == 'None':
+        return None
+    return value
 
 
 def to_js_bool(bool_value):
@@ -59,7 +123,7 @@ def to_true_value(value):
     return False
 
 
-def object_to_dict(instance):
+def dict_from_object(instance):
     """
     Convert an object to a dictionary set of values.  Preserves editable fields and many to many fields on models.
     NOTE: this uses a _meta field and therefore may break in the future.  Primarily using it to save space for

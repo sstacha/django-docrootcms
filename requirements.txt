@@ -1,6 +1,6 @@
-Django
+Django<4.0
 django-markdownx
-django-docrootcms-tagulous
+django-tagulous
 django-docrootcms
 
 # requests
