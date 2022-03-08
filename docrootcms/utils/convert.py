@@ -29,31 +29,33 @@ def to_iso8601(value=None, tz=DEFAULT_TIMEZONE):
 
 
 def from_iso8601(value=None, tz=DEFAULT_TIMEZONE):
-    if not isinstance(value, str) and len(value.strip()) > 0:
-        return None
-    # remove colons and dashes EXCEPT for the dash indicating + or - utc offset for the timezone
-    conformed_timestamp = re.sub(r"[:]|([-](?!((\d{2}[:]\d{2})|(\d{4}))$))", "", value)
-    _value = None
-    try:
-        _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M%S.%f%z")
-    except ValueError:
+    _value = value
+    if isinstance(value, str):
+        if len(value.strip()) > 0:
+            return None
+        # remove colons and dashes EXCEPT for the dash indicating + or - utc offset for the timezone
+        conformed_timestamp = re.sub(r"[:]|([-](?!((\d{2}[:]\d{2})|(\d{4}))$))", "", value)
+        _value = None
         try:
-            _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M%S.%f")
+            _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M%S.%f%z")
         except ValueError:
             try:
-                _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M%S")
+                _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M%S.%f")
             except ValueError:
                 try:
-                    _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M")
+                    _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M%S")
                 except ValueError:
                     try:
                         _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M")
                     except ValueError:
                         try:
-                            _value = datetime.strptime(conformed_timestamp, "%Y%m%d")
+                            _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M")
                         except ValueError:
-                            raise ValueError(f"DateTime string [{value}] did not match an expected pattern.")
-    if _value and not _value.tzinfo:
+                            try:
+                                _value = datetime.strptime(conformed_timestamp, "%Y%m%d")
+                            except ValueError:
+                                raise ValueError(f"DateTime string [{value}] did not match an expected pattern.")
+    if isinstance(_value, datetime) and not _value.tzinfo:
         _value = tz.localize(_value)
     return _value
 
@@ -67,7 +69,10 @@ def to_date(value=None, tz=DEFAULT_TIMEZONE):
     """
     if value is None:
         return datetime.now(tz)
-    return from_iso8601(value, tz)
+    value = from_iso8601(value, tz)
+    if not isinstance(value, datetime):
+        return None
+    return value
 
 
 # -------- primitive conversions --------
