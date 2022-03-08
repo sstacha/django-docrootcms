@@ -31,7 +31,7 @@ def to_iso8601(value=None, tz=DEFAULT_TIMEZONE):
 def from_iso8601(value=None, tz=DEFAULT_TIMEZONE):
     _value = value
     if isinstance(value, str):
-        if len(value.strip()) > 0:
+        if len(value.strip()) == 0:
             return None
         # remove colons and dashes EXCEPT for the dash indicating + or - utc offset for the timezone
         conformed_timestamp = re.sub(r"[:]|([-](?!((\d{2}[:]\d{2})|(\d{4}))$))", "", value)
@@ -56,18 +56,23 @@ def from_iso8601(value=None, tz=DEFAULT_TIMEZONE):
                             except ValueError:
                                 raise ValueError(f"DateTime string [{value}] did not match an expected pattern.")
     if isinstance(_value, datetime) and not _value.tzinfo:
+        if isinstance(tz, str):
+            tz = pytz.timezone(tz)
         _value = tz.localize(_value)
     return _value
 
 
-def to_date(value=None, tz=DEFAULT_TIMEZONE):
+def to_date(value=None, tz=DEFAULT_TIMEZONE, none_to_now=True):
     """
     Convert string to python date.  Currently, only concerned about iso8601 type formats.  None returns current date.
     :param value: string value for date (currently only iso8601)
     :param tz: pytz timezone (defaults to setting DEFAULT_TIMEZONE or 'America/Chicago')
     :return: python date or original value
     """
-    if value is None:
+    if value is None and none_to_now:
+        # if we don't have a valid timezone try to convert
+        if isinstance(tz, str):
+            tz = pytz.timezone(tz)
         return datetime.now(tz)
     value = from_iso8601(value, tz)
     if not isinstance(value, datetime):
