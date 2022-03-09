@@ -11,11 +11,13 @@ from datetime import datetime
 from collections import defaultdict
 from collections import namedtuple
 from django.conf import settings
+from django.utils import timezone
 from django.db.models.fields.related import ManyToManyField
 
 TRUE_VALUES = ["1", 1, "y", "Y", True, "t", "T", "TRUE", "True", "true", "YES", "Yes", "yes", "ON", "On", "on"]
 FALSE_VALUES = ["0", 0, "n", "N", False, "f", "F", "False", "false", "No", "no", None]
-DEFAULT_TIMEZONE = getattr(settings, "DEFAULT_TIMEZONE", pytz.timezone('America/Chicago'))
+DEFAULT_TIMEZONE = getattr(settings, "TIME_ZONE", pytz.timezone('UTC'))
+DEFAULT_NAIVE = not getattr(settings, "USE_TZ", True)
 
 
 # -------- date conversions --------
@@ -28,7 +30,7 @@ def to_iso8601(value=None, tz=DEFAULT_TIMEZONE):
     return _value[:-8] + _value[-5:]  # Remove microseconds
 
 
-def from_iso8601(value=None, tz=DEFAULT_TIMEZONE):
+def from_iso8601(value=None, tz=DEFAULT_TIMEZONE, naive=DEFAULT_NAIVE):
     _value = value
     if isinstance(value, str):
         if len(value.strip()) == 0:
@@ -55,26 +57,30 @@ def from_iso8601(value=None, tz=DEFAULT_TIMEZONE):
                                 _value = datetime.strptime(conformed_timestamp, "%Y%m%d")
                             except ValueError:
                                 raise ValueError(f"DateTime string [{value}] did not match an expected pattern.")
-    if isinstance(_value, datetime) and not _value.tzinfo:
-        if isinstance(tz, str):
-            tz = pytz.timezone(tz)
-        _value = tz.localize(_value)
+    if not naive:
+        if isinstance(_value, datetime) and not _value.tzinfo:
+            if isinstance(tz, str):
+                tz = pytz.timezone(tz)
+            _value = tz.localize(_value)
     return _value
 
 
-def to_date(value=None, tz=DEFAULT_TIMEZONE, none_to_now=True):
+def to_date(value=None, tz=DEFAULT_TIMEZONE, none_to_now=True, naive=DEFAULT_NAIVE):
     """
     Convert string to python date.  Currently, only concerned about iso8601 type formats.  None returns current date.
     :param value: string value for date (currently only iso8601)
     :param tz: pytz timezone (defaults to setting DEFAULT_TIMEZONE or 'America/Chicago')
+    :param naive: should we return a naive datetime instead of converting even if USE_TZ is set
     :return: python date or original value
     """
     if value is None and none_to_now:
+        if naive:
+            return datetime.now()
         # if we don't have a valid timezone try to convert
         if isinstance(tz, str):
             tz = pytz.timezone(tz)
         return datetime.now(tz)
-    value = from_iso8601(value, tz)
+    value = from_iso8601(value, tz, naive)
     if not isinstance(value, datetime):
         return None
     return value
