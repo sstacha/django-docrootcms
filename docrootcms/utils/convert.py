@@ -30,6 +30,17 @@ def to_iso8601(value=None, tz=DEFAULT_TIMEZONE):
     return _value[:-8] + _value[-5:]  # Remove microseconds
 
 
+def to_aware(value=None, tz=DEFAULT_TIMEZONE):
+    # don't allow overriding tz to None
+    if tz is None:
+        tz = DEFAULT_TIMEZONE
+    if isinstance(value, datetime) and not value.tzinfo:
+        if isinstance(tz, str):
+            tz = pytz.timezone(tz)
+        return tz.localize(value)
+    return value
+
+
 def from_iso8601(value=None, tz=DEFAULT_TIMEZONE, naive=DEFAULT_NAIVE):
     _value = value
     if isinstance(value, str):
@@ -51,27 +62,62 @@ def from_iso8601(value=None, tz=DEFAULT_TIMEZONE, naive=DEFAULT_NAIVE):
                         _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M")
                     except ValueError:
                         try:
-                            _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H%M")
+                            _value = datetime.strptime(conformed_timestamp, "%Y%m%dT%H")
                         except ValueError:
                             try:
                                 _value = datetime.strptime(conformed_timestamp, "%Y%m%d")
                             except ValueError:
                                 raise ValueError(f"DateTime string [{value}] did not match an expected pattern.")
     if not naive:
-        if isinstance(_value, datetime) and not _value.tzinfo:
-            if isinstance(tz, str):
-                tz = pytz.timezone(tz)
-            _value = tz.localize(_value)
+        _value = to_aware(_value, tz)
+    return _value
+
+
+def from_db(value=None, tz=DEFAULT_TIMEZONE, naive=DEFAULT_NAIVE):
+    """
+    convert from database format to date if possible; Note we test exact format to prevent false positives
+    @param value: value to convert
+    @param tz: overridden timezone info
+    @param naive: boolean if we specifically want naive date back (defaults to what settings has)
+    @return: date or ValueError or None
+    """
+    _value = value
+    if isinstance(value, str):
+        if len(value.strip()) == 0:
+            return None
+        try:
+            _value = datetime.strptime(value, "%Y-%m-%d %H%M%S.%f%z")
+        except ValueError:
+            try:
+                _value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S.%f")
+            except ValueError:
+                try:
+                    _value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+                except ValueError:
+                    try:
+                        _value = datetime.strptime(value, "%Y-%m-%d %H:%M")
+                    except ValueError:
+                        try:
+                            _value = datetime.strptime(value, "%Y-%m-%d %H")
+                        except ValueError:
+                            try:
+                                _value = datetime.strptime(value, "%Y-%m-%d")
+                            except ValueError:
+                                raise ValueError(f"DateTime string [{value}] did not match an expected pattern.")
+    if not naive:
+        _value = to_aware(_value, tz)
     return _value
 
 
 def to_date(value=None, tz=DEFAULT_TIMEZONE, none_to_now=True, naive=DEFAULT_NAIVE):
     """
-    Convert string to python date.  Currently, only concerned about iso8601 type formats.  None returns current date.
+    Convert string to python date.  Currently, only concerned about iso8601 and db type formats.
+    None returns current date by default but can be overridden with none_to_now optional parameter
     :param value: string value for date (currently only iso8601)
     :param tz: pytz timezone (defaults to setting DEFAULT_TIMEZONE or 'America/Chicago')
+    :param none_to_now: override the default to return now if none is passed; primarily for db operations to store null
     :param naive: should we return a naive datetime instead of converting even if USE_TZ is set
-    :return: python date or original value
+    :return: python date or None
     """
     if value is None and none_to_now:
         if naive:
@@ -80,7 +126,10 @@ def to_date(value=None, tz=DEFAULT_TIMEZONE, none_to_now=True, naive=DEFAULT_NAI
         if isinstance(tz, str):
             tz = pytz.timezone(tz)
         return datetime.now(tz)
-    value = from_iso8601(value, tz, naive)
+    try:
+        value = from_db(value, tz, naive)
+    except ValueError:
+        value = from_iso8601(value, tz, naive)
     if not isinstance(value, datetime):
         return None
     return value
