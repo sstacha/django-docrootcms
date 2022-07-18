@@ -7,15 +7,20 @@ import pytz
 # import requests
 import xml.etree.ElementTree as Etree
 
+from typing import List
 from datetime import datetime
 from collections import defaultdict
 from collections import namedtuple
 from django.conf import settings
-from django.utils import timezone
+# from django.utils import timezone
 from django.db.models.fields.related import ManyToManyField
 
-TRUE_VALUES = ["1", 1, "y", "Y", True, "t", "T", "TRUE", "True", "true", "YES", "Yes", "yes", "ON", "On", "on"]
-FALSE_VALUES = ["0", 0, "n", "N", False, "f", "F", "False", "false", "No", "no", None]
+from .settings import TRUE_VALUES
+from .settings import FALSE_VALUES
+from .settings import to_bool as settings_to_bool
+
+# TRUE_VALUES = ["1", 1, "y", "Y", True, "t", "T", "TRUE", "True", "true", "YES", "Yes", "yes", "ON", "On", "on"]
+# FALSE_VALUES = ["0", 0, "n", "N", False, "f", "F", "False", "false", "No", "no", None]
 DEFAULT_TIMEZONE = getattr(settings, "TIME_ZONE", pytz.timezone('UTC'))
 DEFAULT_NAIVE = not getattr(settings, "USE_TZ", True)
 
@@ -136,28 +141,42 @@ def to_date(value=None, tz=DEFAULT_TIMEZONE, none_to_now=True, naive=DEFAULT_NAI
 
 
 # -------- primitive conversions --------
-def to_bool(value):
+def to_int(value, default=0, none_to_default=True):
     """
-    Convert <value> to boolean.  Mainly handles returning false values passed as parameters which
-    would otherwise return a truthy value.  Returns false if None or FALSE_VALUES, otherwise
-    returns normal boolean truthy value conversion.
-    :param value: expects int, bool, string or None
-    :return: python True/False value
+    Convert <value> to int.  Will always return integer or none instead of throwing exception
+    @param value: value to be converted
+    @param default: default value to use if none or error (defaults to 0 but set to None to have nulls in db)
+    @param none_to_default: preserve a None value or convert to the default; Note: still checks default value afterwards
+    @return: integer value or default or None depending on options
     """
-    # note: need this line because strings and numbers are truthy and will return true
-    if value in FALSE_VALUES:
-        return False
-    return bool(value)
-
-
-def to_none(value):
-    """
-    Convert a string "None" value to python None.
-    :param value: value to be converted
-    :return: None if string "None" is passed otherwise what was passed in
-    """
-    if isinstance(value, str) and value == 'None':
+    if value is None and not none_to_default:
         return None
+    if value is None:
+        value = default
+    try:
+        return int(value)
+    except Exception:
+        # if any exception occurs lets print to screen and then return the supplied default value
+        print(f"WARNING: exception converting <{str(value)}> to int; returning default value: {str(default)}!")
+        return default
+
+
+def to_bool(value):
+    return settings_to_bool(value)
+
+
+def to_none(value, values_to_convert: List[str] = ('None', '')):
+    """
+    Convert a string value to python None if it matches values_to_convert list of strings
+    NOTE: this is helpful for converting string parameter values to None for storage in databases
+    NOTE: we will strip the value first during comparison but not the value returned
+    :param value: value to be converted
+    :param values_to_convert: values to convert if matched
+    :return: None if stripped string matches string in list otherwise the original value
+    """
+    if isinstance(value, str):
+        if value.strip() in values_to_convert:
+            return None
     return value
 
 

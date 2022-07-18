@@ -264,6 +264,18 @@ class ApiMeta:
             if os.path.isfile(self.file_name):
                 log.debug("found file: " + self.file_name)
                 self.is_found = True
+        elif self.file_name.endswith('/'):
+            self.file_name += "index.data.py"
+            if os.path.isfile(self.file_name):
+                log.debug("found file: " + str(self.file_name))
+                self.api_name += "index.json"
+                self.is_found = True
+        else:
+            self.file_name += ".data.py"
+            if os.path.isfile(self.file_name):
+                log.debug("found file: " + str(self.file_name))
+                self.api_name += ".json"
+                self.is_found = True
 
     def render(self):
         # return none if not found
