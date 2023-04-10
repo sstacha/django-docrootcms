@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(name='django-docrootcms',
-      version='2.12',
+      version='3.1',
       description='The missing app for developers creating and maintaining websites',
       long_description=long_description,
       long_description_content_type="text/markdown",
@@ -28,5 +28,6 @@ setuptools.setup(name='django-docrootcms',
       python_requires='>=3.8',
       install_requires=[
           'django',
+          'python-ubercode-utils',
       ],
 )

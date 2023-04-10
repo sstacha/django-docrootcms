@@ -34,14 +34,14 @@ class DocrootFallbackMiddleware(object):
             # will be called by apache for all 404's;
             # first attempt to load a static file (should we skip this if nginx arleady processed? DEBUG=FALSE?
 
-            # attempt to load as static file
+            # attempt to load/render as static file
             result = cms_views.static(request)
             if result:
                 log.debug("result is a static file...")
                 response = result
 
             # attempt to load as template
-            if not result:
+            if not result and request.method=='GET':
                 result = cms_views.page(request)
                 if result:
                     log.debug("result is not none so returning it...")

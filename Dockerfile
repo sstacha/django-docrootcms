@@ -1,6 +1,6 @@
 # docrootCMS docker file for building deployment environment
 #
-FROM python:3.8
+FROM python:3.10
 MAINTAINER Stephen Stacha (sstacha@gmail.com)
 
 # add our database client libraries so we can plug them in later with docker-compose
@@ -37,7 +37,19 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 ## Uncomment to run a bash shell
 #CMD ["/bin/bash"]
 
-# BUILD
+# NEW MULTI-ARCH BUILD
+# ---------
+# PREP(FIRST TIME ON THIS MACHINE)
+# docker buildx create --name builder
+# docker buildx use builder
+# docker buildx inspect --bootstrap
+# docker buildx ls
+# NOTE: at this point should be starred and show archs
+
+# BUILD (ALWAYS)
+# docker buildx build -t sstacha/django-docrootcms:p3.8.10d3.1.12b1 -t sstacha/django-docrootcms --platform linux/amd64,linux/arm64 --push .
+
+# OLD BUILD
 # docker build -t django-docrootcms .
 # RUN
 # docker run --rm -it --name django-docrootcms -p 8000:8000 django-docrootcms

@@ -1,8 +1,15 @@
 # ------------------------ DOCROOT CMS SETTINGS ------------------------------------
 # add our different roots for static files to be served up
 import os
+import sys
 import pathlib
 import datetime
+from ubercode.utils.logging import ColorLogger
+from ubercode.utils.environment import Environment
+
+this_module = sys.modules[__name__]
+LOG_IN_COLOR = Environment().override_variable("LOG_IN_COLOR", True)
+settings_logger = ColorLogger("django.settings", color_output=LOG_IN_COLOR)
 
 try:
     STATIC_ROOT
@@ -130,8 +137,6 @@ if DEBUG:
 # NOTE: Recommend using a DOCROOTCMS_SECRET_KEY environment variable which will get replaced at runtime below
 # Replace any DOCROOTCMS_ prefixed environment variables in settings at startup
 # NOTE: used for docker/local machine environment variable loading overrides
-import sys
-this_module = sys.modules[__name__]
 env_prefix = "DOCROOTCMS_"
 for k, v in os.environ.items():
     if k.upper().startswith(env_prefix):
@@ -139,5 +144,9 @@ for k, v in os.environ.items():
         if attr_key:
             # print (f"attempting to set {attr_key} to [{str(v)}]")
             setattr(this_module, attr_key, v)
+
+# by default override any database environment variables if not specified otherwise
+if not getattr(this_module, "DISABLE_DATABASES_OVERRIDE", False) and hasattr(this_module, "DATABASES"):
+    DATABASES = Environment(logger=settings_logger).override_database_variables(DATABASES)
 
 # ------------------------ DOCROOT CMS SETTINGS ------------------------------------
