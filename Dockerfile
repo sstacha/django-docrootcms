@@ -40,14 +40,14 @@ CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 # NEW MULTI-ARCH BUILD
 # ---------
 # PREP(FIRST TIME ON THIS MACHINE)
-# docker buildx create --name builder
-# docker buildx use builder
+# docker buildx create --name mybuilder
+# docker buildx use mybuilder
 # docker buildx inspect --bootstrap
 # docker buildx ls
 # NOTE: at this point should be starred and show archs
 
 # BUILD (ALWAYS)
-# docker buildx build -t sstacha/django-docrootcms:p3.8.10d3.1.12b1 -t sstacha/django-docrootcms --platform linux/amd64,linux/arm64 --push .
+# docker buildx build -t sstacha/django-docrootcms:p3.10d3.2.18b3.1.1 -t sstacha/django-docrootcms --platform linux/amd64,linux/arm64 --push .
 
 # OLD BUILD
 # docker build -t django-docrootcms .
