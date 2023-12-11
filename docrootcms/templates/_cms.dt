@@ -32,28 +32,32 @@
 {% block page-js %}
     {{ block.super }}
     {# WE WANT ALL PAGE DERIVITIVES TO INCLUDE JQUERY; REQUIRED FOR DOCROOT CMS INTEGRATION #}
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    {# TODO: remove this dep.  we should be able to do everything now with plain js across all browsers #}
+    {# NOTE: users should move this to _site if they want it for their UI #}
+{#    <script src="https://code.jquery.com/jquery-3.3.1.min.js"#}
+{#        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>#}
 
     {# DOCROOT CMS CKEDITOR REQUIREMENT AND CODE TO ENABLE CMS FUNCTIONS IN CKEDITOR #}
     {# todo: python wrapper this with a check for loading ckeditor in the first place #}
-    <script src="https://cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>
-    <script type="text/javascript" charset="utf-8">
-        $( document ).ready(function() {
-
-            $("[contenteditable]").each(function () {
-                   if ($(this).is("[id]"))
-                       console.log("has id...");
-                   else {
-                       console.log("editable content tag found without id; removing editability...");
-                       $(this).attr( "contenteditable", "false" )
-                   }
-                }
-            );
-            CKEDITOR.plugins.addExternal( 'usave', '{% static "ckeditor/plugins/usave/" %}', 'plugin.js' );
-            CKEDITOR.config.customConfig = '{% static "ckeditor/custom_config.js" %}'
-        });
-    </script>
+    {# TODO: removing ckeditor from every page; also, don't use ckeditor CDN without subscription #}
+    {# NOTE: consider manage.py command to pull latest into docroot/files or static files for local use #}
+{#    <script src="https://cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>#}
+{#    <script type="text/javascript" charset="utf-8">#}
+{#        $( document ).ready(function() {#}
+{##}
+{#            $("[contenteditable]").each(function () {#}
+{#                   if ($(this).is("[id]"))#}
+{#                       console.log("has id...");#}
+{#                   else {#}
+{#                       console.log("editable content tag found without id; removing editability...");#}
+{#                       $(this).attr( "contenteditable", "false" )#}
+{#                   }#}
+{#                }#}
+{#            );#}
+{#            CKEDITOR.plugins.addExternal( 'usave', '{% static "ckeditor/plugins/usave/" %}', 'plugin.js' );#}
+{#            CKEDITOR.config.customConfig = '{% static "ckeditor/custom_config.js" %}'#}
+{#        });#}
+{#    </script>#}
 {% endblock %}
 # ------------------------ DOCROOT CMS GLOBAL CSS ------------------------------------
 

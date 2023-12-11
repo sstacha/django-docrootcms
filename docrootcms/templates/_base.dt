@@ -5,7 +5,7 @@
 <title>{% block head_title %}{% endblock %}</title>
 {% block site-icon %}<link rel="icon" type="image/svg+xml" href="/favicon.svg">{% endblock %}
 {% block site-alternate-icon %}<link rel="alternate icon" href="/favicon.ico">{% endblock %}
-{# excuting short script to replace no-js in html with js for use in css below #}
+{# executing short script to replace no-js in html with js for use in css below #}
 <script>{# document.documentElement.className = document.documentElement.className.replace("no-js","js"); #}
 document.documentElement.classList.remove('no-js');
 </script>{# Use in css: .no-js .some-class-name {display: None;} #}
