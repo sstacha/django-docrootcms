@@ -4,7 +4,8 @@ import os
 import shutil
 import pathlib
 from datetime import datetime
-from distutils.sysconfig import get_python_lib
+# from distutils.sysconfig import get_python_lib
+import site
 
 
 class Command(BaseCommand):
@@ -15,6 +16,7 @@ class Command(BaseCommand):
     example: ./manage.py docrootcms test update
     example: ./manage.py docrootcms update
     example: ./manage.py docrootcms develop
+    example: ./manage.py docrootcms debug
 
     options
     --------
@@ -22,6 +24,7 @@ class Command(BaseCommand):
     update - attempts to update user files with any configuration changes in settings and urls
     test - creates new version of files that would be changed instead of changing them
     develop - copies the docroot-cms module in the virtual environment to local project for development
+    debug - prints various library directories
     """
     testing = False
 
@@ -147,19 +150,35 @@ class Command(BaseCommand):
     @staticmethod
     def get_module_path():
         # first try and get it from distutils (since pyenv symlinks to root version and site doesnt work for virtualenv)
-        module_path = pathlib.Path(get_python_lib()) / 'docrootcms'
-        print(f'module path from DISTUTILS.SYSCONFIG: {module_path}')
-        if not os.path.exists(module_path):
-            module_path = pathlib.Path(os.__file__).parent / 'site-packages' / 'docrootcms'
-            print(f'module path from runtime: {module_path}')
-        if not os.path.exists(module_path):
-            # for debugging lets next try to find the app locally to copy from
-            module_path = pathlib.Path('docrootcms')
-            print(f'module path from project: {module_path}')
-        if not os.path.exists(module_path):
-            raise ModuleNotFoundError(
-                'Module docrootcms was not installed.  Install using pip install django-docrootcms and try again.')
-        return module_path
+        # distutils is deprecated and site seems to work; trying it instead
+        # note: sitepackages() returns an array; find the path with our module
+        for site_package in site.getsitepackages():
+            _site_module = pathlib.Path(site_package) / 'docrootcms'
+            if os.path.exists(_site_module):
+                print(f'module path from site: {_site_module}')
+                return _site_module
+        # if we didn't find our module then try to find it by os location
+        _site_module = pathlib.Path(os.__file__).parent / 'site-packages' / 'docrootcms'
+        if os.path.exists(_site_module):
+            print(f'module path from os: {_site_module}')
+            return _site_module
+        raise ModuleNotFoundError(
+            'Module docrootcms was not installed.  Install using pip install django-docrootcms and try again.')
+        # OLD CODE
+        # --------
+        # module_path = pathlib.Path(get_python_lib()) / 'docrootcms'
+        # print(f'module path from DISTUTILS.SYSCONFIG: {module_path}')
+        # if not os.path.exists(module_path):
+        #     module_path = pathlib.Path(os.__file__).parent / 'site-packages' / 'docrootcms'
+        #     print(f'module path from runtime: {module_path}')
+        # if not os.path.exists(module_path):
+        #     # for debugging lets next try to find the app locally to copy from
+        #     module_path = pathlib.Path('docrootcms')
+        #     print(f'module path from project: {module_path}')
+        # if not os.path.exists(module_path):
+        #     raise ModuleNotFoundError(
+        #         'Module docrootcms was not installed.  Install using pip install django-docrootcms and try again.')
+        # return module_path
 
     def install(self):
         success_instructions = """
@@ -237,5 +256,9 @@ class Command(BaseCommand):
                 self.stderr.write(self.style.ERROR(f'{nfe}'))
         elif "develop" in options['option']:
             self.stdout.write(self.style.WARNING(f'{self.develop()}'))
+        elif "debug" in options['option']:
+            self.stdout.write(f'distutils -> {self.get_module_path()}')
+            self.stdout.write(f'site packages -> {site.getsitepackages()}')
+            self.stdout.write(f'__file__ -> {pathlib.Path(__file__).resolve()}')
         else:
             self.stdout.write(self.style.SUCCESS(self.help))

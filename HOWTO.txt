@@ -1,3 +1,26 @@
+NOTE: setup.py (what I used before is deprecated; trying new instructions)
+New Instructions:
+From:
+https://packaging.python.org/en/latest/guides/distributing-packages-using-setuptools/
+
+make sure build and twine is installed
+pip install --upgrade build
+pip install --upgrade twine
+
+delete any dist build or egg files or folders (send to trash to be safe)
+note: use the --sdist and --wheel if you have compiled stuff separate
+(to build everything)
+python -m build
+
+upload to pypi using twine
+--
+test command
+python -m twine upload --repository testpypi dist/*
+
+live command
+python -m twine upload dist/*
+
+OLD_INSTRUCTIONS with setup.py commands
 From:
 https://docs.djangoproject.com/en/3.0/intro/reusable-apps/
 
