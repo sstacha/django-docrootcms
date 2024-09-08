@@ -139,3 +139,4 @@ manage.py
 # /markdownx/
 /static/
 
+.DS_Store
