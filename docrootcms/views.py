@@ -25,7 +25,7 @@ from .forms import LoginForm
 from .models import Content
 from .cms import TemplateMeta, ApiMeta
 
-log = logging.getLogger("cms.views")
+log = logging.getLogger("docrootcms.views")
 
 
 # Markdownx overridden views to have images store the way we want
@@ -39,9 +39,10 @@ def static(request):
     docroot_dir = getattr(settings, "DOCROOT_ROOT", "")
     use_static = getattr(settings, "USE_STATIC_FORBIDDEN", False)
     log.debug("docroot dir: " + str(docroot_dir))
-    path = request.path_info
-    if path.startswith("/"):
-        path = path[1:]
+    path = request.path_info or ""
+    path = path.lstrip('/')
+    # if path.startswith("/"):
+    #     path = path[1:]
     log.debug("path: " + path)
     file = os.path.join(docroot_dir, path)
     log.debug("file: " + file)
