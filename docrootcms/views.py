@@ -43,7 +43,12 @@ def static(request):
     if path.startswith("/"):
         path = path[1:]
     log.debug("path: " + path)
-    file = os.path.join(docroot_dir, path)
+    # never return any static file outside of our docroot location
+    # NOTE: this prevents relative paths from exposing system stuff
+    # EX: curl --path-as-is "http://localhost:8000/../../../../../../../../../../../../etc/passwd"
+    file = os.path.normpath(os.path.join(docroot_dir, path))
+    if str(docroot_dir) not in file:
+        return None
     log.debug("file: " + file)
     if os.path.isfile(file):
         # for various reasons we don't want to serve up various file extensions. Let's look at a setting containing
